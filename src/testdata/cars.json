@@ -1,0 +1,77 @@
+[
+    {
+        "mark": "Toyota",
+        "icon": "https://auto-virage.ru/800/600/http/papik.pro/uploads/posts/2022-01/1642355697_19-papik-pro-p-toiota-klipart-19.png",
+        "models": [
+            {
+                "model": "Corolla"
+            },
+            {
+                "model": "Camry"
+            },
+            {
+                "model": "RAV4"
+            }
+        ]
+    },
+    {
+        "mark": "Honda",
+        "icon": "https://i.pinimg.com/736x/28/e5/81/28e581c1e5433ccd6542195ce2c768f5.jpg",
+        "models": [
+            {
+                "model": "Civic"
+            },
+            {
+                "model": "Accord"
+            },
+            {
+                "model": "CR-V"
+            }
+        ]
+    },
+    {
+        "mark": "Ford",
+        "icon": "https://subsuz.ru/wp-content/uploads/2022/07/ford_blue_4x-300x225.webp",
+        "models": [
+            {
+                "model": "Focus"
+            },
+            {
+                "model": "Fusion"
+            },
+            {
+                "model": "Escape"
+            }
+        ]
+    },
+    {
+        "mark": "Chevrolet",
+        "icon": "https://listcarbrands.com/wp-content/uploads/2016/02/classic-chevrolet-logo-300x169.jpg",
+        "models": [
+            {
+                "model": "Cruze"
+            },
+            {
+                "model": "Malibu"
+            },
+            {
+                "model": "Equinox"
+            }
+        ]
+    },
+    {
+        "mark": "BMW",
+        "icon": "https://ev-chargers.com/wp-content/uploads/2022/08/Bmw-logo-940x940.png",
+        "models": [
+            {
+                "model": "3 Series"
+            },
+            {
+                "model": "5 Series"
+            },
+            {
+                "model": "X3"
+            }
+        ]
+    }
+]

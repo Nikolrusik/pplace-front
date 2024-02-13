@@ -1,0 +1,57 @@
+.cars {
+    margin: 0 auto;
+    max-width: 800px;
+
+    &-categories {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+
+
+        &__item {
+            transition: 0.3s;
+            border: 1px solid black;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+
+            img {
+                width: 200px;
+                height: 200px;
+                object-fit: contain;
+            }
+
+            &-name {
+                text-align: center;
+            }
+
+            &:hover {
+                box-shadow: 0px 0px 7px 5px rgba(34, 60, 80, 0.2);
+            }
+        }
+    }
+
+    &-marks {
+        &__list {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        &__mark {
+            border: 1px solid black;
+            border-radius: 8px;
+            padding: 5px;
+            min-width: 100px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+                background: #9f60601c;
+            }
+        }
+    }
+}
