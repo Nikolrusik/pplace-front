@@ -1,0 +1,10 @@
+
+
+const BACKEND_IP = "127.0.0.1:8000"
+
+const BACKEND_PROTOCOL = 'http'
+const BACKEND_PREFIX = '/api/v1'
+const BACKEND_URL = BACKEND_PROTOCOL + '://' + BACKEND_IP + BACKEND_PREFIX
+
+
+export default BACKEND_URL

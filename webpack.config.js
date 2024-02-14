@@ -2,10 +2,11 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.tsx', // Укажите точку входа как .tsx файл
+    entry: '/src/index.tsx', // Укажите точку входа как .tsx файл
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index-bundle.js',
+        publicPath: "/"
     },
     module: {
         rules: [
@@ -22,10 +23,13 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html',
+            template: '/src/index.html',
         }),
     ],
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'], // Добавляем расширения .ts и .tsx
+    },
+    devServer: {
+        historyApiFallback: true,
     },
 };

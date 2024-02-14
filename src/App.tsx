@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Categories from "./components/Categories";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import './styles/App.scss';
-import Categories from "./components/Categories";
+import { MAIN, MODELS, PARTS } from "./constants/paths";
+import Models from "./components/Models";
+import Parts from "./components/Parts";
 
 const App = (props: any) => {
     const { BX24 } = props;
@@ -18,7 +22,7 @@ const App = (props: any) => {
 
 
     return (
-        <div>
+        <>
             <h1>TEST | List </h1>
             {BX24 &&
                 <>
@@ -26,10 +30,18 @@ const App = (props: any) => {
                     <div className="user-info">
                         <p>{firstName}</p>
                     </div>
+
                 </>
             }
-            <Categories />
-        </div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path={MAIN} element={<Categories />} />
+                    <Route path={MODELS + '/:id'} element={<Models />} />
+                    <Route path={PARTS} element={<Parts />} />
+                </Routes>
+            </BrowserRouter>
+
+        </>
     )
 }
 

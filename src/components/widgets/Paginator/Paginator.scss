@@ -1,0 +1,17 @@
+.paginator {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+
+    &__item {
+        background: aliceblue;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 10px;
+
+        &--current {
+            background: rgb(139, 196, 247);
+        }
+    }
+}
