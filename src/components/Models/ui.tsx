@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { TModels } from "./types"
-import { Link, useParams } from "react-router-dom"
+import { Link, createSearchParams, useLocation, useParams, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import BACKEND_URL from "../../constants/constants"
 import { MAIN, PARTS } from "../../constants/paths"
+import Search from "../widgets/Search"
+import Paginator from "../widgets/Paginator"
 
 type modes = {
     id: number
@@ -14,31 +16,124 @@ const Models: React.FC<TModels> = () => {
     const { id } = useParams()
     const [models, setModels] = useState<modes[]>([])
 
-    const fetchData = () => {
-        axios.get(`${BACKEND_URL}/cars/marks_car/${id}/`)
+    const [limit, setLimit] = useState(1)
+    const [offset, setOffset] = useState(0)
+    const [search, setSearch] = useState('')
+    const [total, setTotal] = useState(0)
+    const [isSearch, setIsSearch] = useState(false)
+    const [sort, setSort] = useState('name')
+
+    const pages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
+    const currentPage = offset / limit + 1
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const currLimit = Number(queryParams.get('limit'))
+    const currOffset = Number(queryParams.get('offset'))
+    const [_, setSearchParams] = useSearchParams()
+
+    const fetchData = (limit?: number, offset?: number, search?: string) => {
+        axios.get(`${BACKEND_URL}/cars/marks_car/${id}/`, {
+            params: {
+                limit: limit,
+                offset: offset,
+                search: search,
+                ordering: sort
+            }
+        })
             .then((resp) => {
-                console.log(resp.data)
+                setTotal(resp.data.count)
                 setModels(resp.data.results)
             })
     }
 
     useEffect(() => {
-        fetchData()
-    }, [])
+        const params = new URLSearchParams({
+            limit: `${limit}`,
+            offset: `${offset}`,
+            search: isSearch ? search : '',
+            ordering: sort
+        })
+        const newParams = createSearchParams(params)
+        setSearchParams(newParams)
+
+        fetchData(limit, offset, isSearch ? search : '')
+    }, [offset, limit, isSearch, sort])
+
+
+    useEffect(() => {
+        if (currLimit) {
+            setLimit(currLimit)
+        }
+        if (currOffset && currOffset >= pages[0] && currOffset <= pages.length)
+            setOffset(currOffset)
+
+    }, [currLimit, currOffset])
+
+
+    const goSearch = () => {
+        if (search !== '') {
+            setIsSearch(true)
+        } else {
+            setIsSearch(false)
+        }
+        setOffset(0)
+        fetchData(limit, offset, isSearch ? search : '')
+    }
+
+
+    const handleInputChange = (event: any) => {
+        const input = event.target.value
+        setSearch(input)
+    }
+
+    const handleOrderChange = (event: any) => {
+        const val = event.target.value
+        setOffset(0)
+        setSort(val)
+    }
+
     return (
         <div className="cars-marks">
-            <Link to={MAIN} className="cars-marks__back button">Назад</Link>
-            <div className="cars-marks__list">
-                {models.map((model) => (
-                    <Link
-                        to={'/' + PARTS}
-                        className="cars-marks__mark"
-                        key={model.id}
-                    >
-                        {model.name}
-                    </Link>
-                ))}
+            <div className="control">
+                <Link to={MAIN} className="cars-marks__back button">Назад</Link>
+                <Search
+                    search={search}
+                    goSearch={goSearch}
+                    handleChange={handleInputChange}
+                />
+                <div className="sorting">
+                    <select name="sorter" id="" onChange={handleOrderChange}>
+                        <option value="name">По алфавиту</option>
+                        <option value="-name">Обратно по алфавиту</option>
+                    </select>
+                </div>
             </div>
+            <div className="cars-marks__list">
+                {models.length > 0 &&
+                    models.map((model) => (
+                        <Link
+                            to={'/' + PARTS + '/' + id}
+                            className="cars-marks__mark"
+                            key={model.id}
+                        >
+                            {model.name}
+                        </Link>
+                    ))}
+                {models.length === 0 &&
+                    <div className="cars-marks__empty">
+                        Нет ни одной модели
+                    </div>
+                }
+            </div>
+            {pages.length > 1 &&
+                <Paginator
+                    setOffset={setOffset}
+                    limit={limit}
+                    currentPage={currentPage}
+                    pages={pages}
+                />
+            }
         </div>
     )
 }

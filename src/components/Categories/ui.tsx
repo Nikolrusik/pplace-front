@@ -24,6 +24,7 @@ const Categories = () => {
     const [search, setSearch] = useState('')
     const [total, setTotal] = useState(0)
     const [isSearch, setIsSearch] = useState(false)
+    const [sort, setSort] = useState('name')
 
     const pages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
     const currentPage = offset / limit + 1
@@ -41,7 +42,8 @@ const Categories = () => {
             params: {
                 limit: limit,
                 offset: offset,
-                search: search
+                search: search,
+                ordering: sort
             }
         })
             .then((resp) => {
@@ -55,13 +57,14 @@ const Categories = () => {
         const params = new URLSearchParams({
             limit: `${limit}`,
             offset: `${offset}`,
-            search: isSearch ? search : ''
+            search: isSearch ? search : '',
+            ordering: sort
         })
         const newParams = createSearchParams(params)
         setSearchParams(newParams)
 
         fetchData(limit, offset, isSearch ? search : '')
-    }, [offset, limit, isSearch])
+    }, [offset, limit, isSearch, sort])
 
 
     useEffect(() => {
@@ -80,6 +83,7 @@ const Categories = () => {
         } else {
             setIsSearch(false)
         }
+        setOffset(0)
         fetchData(limit, offset, isSearch ? search : '')
     }
 
@@ -88,25 +92,44 @@ const Categories = () => {
         const input = event.target.value
         setSearch(input)
     }
+    const handleOrderChange = (event: any) => {
+        const val = event.target.value
+        setOffset(0)
+        setSort(val)
+    }
 
     return (
         <div className="cars">
-            <Search
-                search={search}
-                goSearch={goSearch}
-                handleChange={handleInputChange}
-            />
+            <div className="control">
+                <Search
+                    search={search}
+                    goSearch={goSearch}
+                    handleChange={handleInputChange}
+                />
+                <div className="sorting">
+                    <select name="sorter" id="" onChange={handleOrderChange}>
+                        <option value="name">По алфавиту</option>
+                        <option value="-name">Обратно по алфавиту</option>
+                    </select>
+                </div>
+            </div>
             <div className="cars-categories">
-                {carMarks.map((carMark) => (
-                    <Link
-                        className="cars-categories__item"
-                        to={`${MODELS}/${carMark.id}`}
-                        key={carMark.id}
-                    >
-                        <img src={carMark.icon} alt="mark icon" />
-                        <p className="cars-categories__item-name">{carMark.name}</p>
-                    </Link>
-                ))
+                {carMarks.length > 0 &&
+                    carMarks.map((carMark) => (
+                        <Link
+                            className="cars-categories__item"
+                            to={`${MODELS}/${carMark.id}`}
+                            key={carMark.id}
+                        >
+                            <img src={carMark.icon} alt="mark icon" />
+                            <p className="cars-categories__item-name">{carMark.name}</p>
+                        </Link>
+                    ))
+                }
+                {carMarks.length === 0 &&
+                    <div className="cart-categories__empty">
+                        Нет ни одной марки
+                    </div>
                 }
             </div>
             {pages.length > 1 &&

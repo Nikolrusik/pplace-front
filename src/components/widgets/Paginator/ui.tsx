@@ -31,6 +31,7 @@ const Paginator: React.FC<TPaginator> = (props) => {
                     onClick={() => {
                         setOffset(limit * (page - 1))
                     }}
+                    key={page}
                 >
                     {page}
                 </div>

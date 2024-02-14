@@ -38,6 +38,7 @@ const App = (props: any) => {
                     <Route path={MAIN} element={<Categories />} />
                     <Route path={MODELS + '/:id'} element={<Models />} />
                     <Route path={PARTS} element={<Parts />} />
+                    <Route path={PARTS + '/:model_id'} element={<Parts />} />
                 </Routes>
             </BrowserRouter>
 
