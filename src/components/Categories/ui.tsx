@@ -19,21 +19,25 @@ type cars = {
 
 const Categories = () => {
     const [carMarks, setCarMarks] = useState<cars[]>([])
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
 
-    const [limit, setLimit] = useState(3)
-    const [offset, setOffset] = useState(0)
-    const [search, setSearch] = useState('')
+    const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 5
+    const currOffset = Number(queryParams.get('offset')) ? Number(queryParams.get('offset')) : 0
+    const currOrdering = queryParams.get('ordering') ? queryParams.get('ordering') : 'name'
+    const currIsSearch = queryParams.get('is_search') === 'true'
+    const currSearch = queryParams.get('search') ? queryParams.get('search') : ''
+
+    const [limit, setLimit] = useState(currLimit)
+    const [offset, setOffset] = useState(currOffset)
+    const [search, setSearch] = useState(currSearch)
     const [total, setTotal] = useState(0)
-    const [isSearch, setIsSearch] = useState(false)
-    const [sort, setSort] = useState('name')
+    const [isSearch, setIsSearch] = useState(currIsSearch)
+    const [sort, setSort] = useState(currOrdering)
 
     const pages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
     const currentPage = offset / limit + 1
 
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const currLimit = Number(queryParams.get('limit'))
-    const currOffset = Number(queryParams.get('offset'))
 
     const [_, setSearchParams] = useSearchParams()
 
@@ -127,8 +131,8 @@ const Categories = () => {
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange}>
-                        <option value="name">По алфавиту</option>
-                        <option value="-name">Обратно по алфавиту</option>
+                        <option value="name" selected={sort === 'name'}>По алфавиту</option>
+                        <option value="-name" selected={sort === '-name'}>Обратно по алфавиту</option>
                     </select>
                 </div>
                 <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
@@ -138,7 +142,7 @@ const Categories = () => {
                     carMarks.map((carMark) => (
                         <Link
                             className="cars-categories__item"
-                            to={`${MODELS}/${carMark.id}`}
+                            to={`${MODELS}/${carMark.id}?ordering=${sort}`}
                             key={carMark.id}
                         >
                             <img src={carMark.icon} alt="mark icon" />

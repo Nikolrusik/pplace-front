@@ -20,20 +20,25 @@ const Parts: React.FC<TParts> = () => {
 
     const [parts, setParts] = useState<parts[]>([])
 
-    const [limit, setLimit] = useState(5)
-    const [offset, setOffset] = useState(0)
-    const [search, setSearch] = useState('')
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+
+    const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 5
+    const currOffset = Number(queryParams.get('offset')) ? Number(queryParams.get('offset')) : 0
+    const currOrdering = queryParams.get('ordering') ? queryParams.get('ordering') : 'name'
+    const currIsSearch = queryParams.get('is_search') === 'true'
+    const currSearch = queryParams.get('search') ? queryParams.get('search') : ''
+
+    const [limit, setLimit] = useState(currLimit)
+    const [offset, setOffset] = useState(currOffset)
+    const [search, setSearch] = useState(currSearch)
     const [total, setTotal] = useState(0)
-    const [isSearch, setIsSearch] = useState(false)
-    const [sort, setSort] = useState('name')
+    const [isSearch, setIsSearch] = useState(currIsSearch)
+    const [sort, setSort] = useState(currOrdering)
 
     const pages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
     const currentPage = offset / limit + 1
 
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const currLimit = Number(queryParams.get('limit'))
-    const currOffset = Number(queryParams.get('offset'))
     const [_, setSearchParams] = useSearchParams()
 
     const fetchData = (limit?: number, offset?: number, search?: string) => {
@@ -116,7 +121,7 @@ const Parts: React.FC<TParts> = () => {
         <div className="parts">
             <div className="control">
 
-                <Link to={`/${MODELS}/${model_id ? model_id : ''}`} className="cars-marks__back button">Назад</Link>
+                <Link to={`/${MODELS}/${model_id ? model_id : ''}?ordering=${sort}`} className="cars-marks__back button">Назад</Link>
                 <Search
                     search={search}
                     goSearch={goSearch}
@@ -125,8 +130,8 @@ const Parts: React.FC<TParts> = () => {
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange}>
-                        <option value="name">По алфавиту</option>
-                        <option value="-name">Обратно по алфавиту</option>
+                        <option value="name" selected={sort === 'name'}>По алфавиту</option>
+                        <option value="-name" selected={sort === '-name'}>Обратно по алфавиту</option>
                     </select>
                 </div>
                 <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
