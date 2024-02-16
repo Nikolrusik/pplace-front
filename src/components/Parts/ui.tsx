@@ -1,12 +1,13 @@
 import "./Parts.scss"
 import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import BACKEND_URL from "../../constants/constants"
 import { Link, createSearchParams, useLocation, useParams, useSearchParams } from "react-router-dom"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
 import { TParts } from "./types"
 import { MODELS } from "../../constants/paths"
+import Settings from "../widgets/Settings"
 
 
 type parts = {
@@ -19,7 +20,7 @@ const Parts: React.FC<TParts> = () => {
 
     const [parts, setParts] = useState<parts[]>([])
 
-    const [limit, setLimit] = useState(1)
+    const [limit, setLimit] = useState(5)
     const [offset, setOffset] = useState(0)
     const [search, setSearch] = useState('')
     const [total, setTotal] = useState(0)
@@ -97,6 +98,20 @@ const Parts: React.FC<TParts> = () => {
         setSort(val)
     }
 
+    const [tempLimit, setTempLimit] = useState(limit)
+    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const val = Number(event.target.value)
+        setTempLimit(val)
+    }
+
+    const saveLimit = () => {
+        if (tempLimit > 0) {
+            setLimit(tempLimit)
+        } else {
+            setLimit(5)
+            setTempLimit(5)
+        }
+    }
     return (
         <div className="parts">
             <div className="control">
@@ -108,11 +123,13 @@ const Parts: React.FC<TParts> = () => {
                     handleChange={handleInputChange}
                 />
                 <div className="sorting">
+                    <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange}>
                         <option value="name">По алфавиту</option>
                         <option value="-name">Обратно по алфавиту</option>
                     </select>
                 </div>
+                <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
             </div>
             <div className="parts__list">
                 {parts.length > 0 &&

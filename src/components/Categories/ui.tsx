@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 
 import "./Categories.scss"
 import axios from "axios"
 import cars from "../../testdata/cars.json"
 import BACKEND_URL from "../../constants/constants";
-import { Link, useLocation, useNavigate, createSearchParams, useSearchParams } from "react-router-dom";
+import { Link, Outlet, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
 import { MODELS } from "../../constants/paths";
 import classNames from "classnames";
 import Paginator from "../widgets/Paginator";
 import Search from "../widgets/Search";
+import Settings from "../widgets/Settings";
 
 type cars = {
     id: number
@@ -19,7 +20,7 @@ type cars = {
 const Categories = () => {
     const [carMarks, setCarMarks] = useState<cars[]>([])
 
-    const [limit, setLimit] = useState(1)
+    const [limit, setLimit] = useState(3)
     const [offset, setOffset] = useState(0)
     const [search, setSearch] = useState('')
     const [total, setTotal] = useState(0)
@@ -33,12 +34,14 @@ const Categories = () => {
     const queryParams = new URLSearchParams(location.search);
     const currLimit = Number(queryParams.get('limit'))
     const currOffset = Number(queryParams.get('offset'))
-    const [_, setSearchParams] = useSearchParams()
 
+    const [_, setSearchParams] = useSearchParams()
 
 
     const fetchData = (limit?: number, offset?: number, search?: string) => {
         axios.get(BACKEND_URL + '/cars/cars/', {
+            headers: {
+            },
             params: {
                 limit: limit,
                 offset: offset,
@@ -51,6 +54,7 @@ const Categories = () => {
                 setCarMarks(resp.data?.results)
 
             })
+            .catch(() => { })
     }
 
     useEffect(() => {
@@ -97,6 +101,20 @@ const Categories = () => {
         setOffset(0)
         setSort(val)
     }
+    const [tempLimit, setTempLimit] = useState(limit)
+    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const val = Number(event.target.value)
+        setTempLimit(val)
+    }
+
+    const saveLimit = () => {
+        if (tempLimit > 0) {
+            setLimit(tempLimit)
+        } else {
+            setLimit(5)
+            setTempLimit(5)
+        }
+    }
 
     return (
         <div className="cars">
@@ -107,11 +125,13 @@ const Categories = () => {
                     handleChange={handleInputChange}
                 />
                 <div className="sorting">
+                    <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange}>
                         <option value="name">По алфавиту</option>
                         <option value="-name">Обратно по алфавиту</option>
                     </select>
                 </div>
+                <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
             </div>
             <div className="cars-categories">
                 {carMarks.length > 0 &&
@@ -140,7 +160,8 @@ const Categories = () => {
                     pages={pages}
                 />
             }
-        </div>
+            {/* <Outlet /> */}
+        </div >
     )
 }
 

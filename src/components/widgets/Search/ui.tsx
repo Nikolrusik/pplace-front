@@ -11,13 +11,14 @@ const Search: React.FC<TSearch> = (props) => {
 
     return (
         <div className="search">
+            <div className="option-title">Поиск</div>
             <input
                 type="text"
                 placeholder="Искомое"
                 onChange={handleChange}
                 value={search}
             />
-            <div className="" onClick={() => goSearch()}>Найти</div>
+            <button className="" onClick={() => goSearch()}>Найти</button>
         </div>
     )
 }

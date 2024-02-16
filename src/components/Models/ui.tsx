@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { TModels } from "./types"
 import { Link, createSearchParams, useLocation, useParams, useSearchParams } from "react-router-dom"
 import axios from "axios"
@@ -6,6 +6,7 @@ import BACKEND_URL from "../../constants/constants"
 import { MAIN, PARTS } from "../../constants/paths"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
+import Settings from "../widgets/Settings"
 
 type modes = {
     id: number
@@ -16,7 +17,7 @@ const Models: React.FC<TModels> = () => {
     const { id } = useParams()
     const [models, setModels] = useState<modes[]>([])
 
-    const [limit, setLimit] = useState(1)
+    const [limit, setLimit] = useState(5)
     const [offset, setOffset] = useState(0)
     const [search, setSearch] = useState('')
     const [total, setTotal] = useState(0)
@@ -93,6 +94,20 @@ const Models: React.FC<TModels> = () => {
         setSort(val)
     }
 
+    const [tempLimit, setTempLimit] = useState(limit)
+    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const val = Number(event.target.value)
+        setTempLimit(val)
+    }
+
+    const saveLimit = () => {
+        if (tempLimit > 0) {
+            setLimit(tempLimit)
+        } else {
+            setLimit(5)
+            setTempLimit(5)
+        }
+    }
     return (
         <div className="cars-marks">
             <div className="control">
@@ -103,11 +118,14 @@ const Models: React.FC<TModels> = () => {
                     handleChange={handleInputChange}
                 />
                 <div className="sorting">
+                    <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange}>
                         <option value="name">По алфавиту</option>
                         <option value="-name">Обратно по алфавиту</option>
                     </select>
                 </div>
+
+                <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
             </div>
             <div className="cars-marks__list">
                 {models.length > 0 &&

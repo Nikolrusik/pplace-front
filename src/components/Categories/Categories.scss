@@ -38,6 +38,9 @@
             display: flex;
             justify-content: center;
             gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
         }
 
         &__mark {

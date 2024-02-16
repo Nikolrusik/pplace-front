@@ -23,7 +23,7 @@ const App = (props: any) => {
 
     return (
         <>
-            <h1>TEST | List </h1>
+            <h1>TEST | Марки </h1>
             {BX24 &&
                 <>
                     <p className="">Админ: {isAdmin ? 'Да' : 'Нет'}</p>
@@ -33,15 +33,14 @@ const App = (props: any) => {
 
                 </>
             }
-            <BrowserRouter>
+            <BrowserRouter >
                 <Routes>
-                    <Route path={MAIN} element={<Categories />} />
+                    <Route path={'*'} element={<Categories />} />
                     <Route path={MODELS + '/:id'} element={<Models />} />
                     <Route path={PARTS} element={<Parts />} />
                     <Route path={PARTS + '/:model_id'} element={<Parts />} />
                 </Routes>
             </BrowserRouter>
-
         </>
     )
 }

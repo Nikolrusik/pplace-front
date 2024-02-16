@@ -3,11 +3,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: '/src/index.tsx', // Укажите точку входа как .tsx файл
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'index-bundle.js',
-        publicPath: "/"
-    },
+    // output: {
+    //     path: path.resolve(__dirname, 'dist'),
+    //     filename: 'index_bundle.js',
+    //     // publicPath: "/",
+
+    //     publicPath: "/b28502136/app_local/473ee3726de57156bf426c46b8ee25a5/"
+    // },
     module: {
         rules: [
             {
