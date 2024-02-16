@@ -2,7 +2,7 @@ import "./Parts.scss"
 import axios from "axios"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import BACKEND_URL from "../../constants/constants"
-import { Link, createSearchParams, useLocation, useParams, useSearchParams } from "react-router-dom"
+import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
 import { TParts } from "./types"
@@ -16,11 +16,11 @@ type parts = {
     icon: string
 }
 const Parts: React.FC<TParts> = () => {
-    const { model_id } = useParams()
+    const { car_id, model_id } = useParams()
 
     const [parts, setParts] = useState<parts[]>([])
 
-    const location = useLocation();
+    const location = useLocation()
     const queryParams = new URLSearchParams(location.search);
 
     const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 5
@@ -54,6 +54,7 @@ const Parts: React.FC<TParts> = () => {
                 setTotal(resp.data.count)
                 setParts(resp.data?.results)
             })
+            .catch(() => { })
     }
 
 
@@ -65,11 +66,10 @@ const Parts: React.FC<TParts> = () => {
             ordering: sort
         })
         const newParams = createSearchParams(params)
-        setSearchParams(newParams)
+        setSearchParams(newParams, { state: location.state })
 
         fetchData(limit, offset, isSearch ? search : '')
     }, [offset, limit, isSearch, sort])
-
 
     useEffect(() => {
         if (currLimit) {
@@ -117,11 +117,13 @@ const Parts: React.FC<TParts> = () => {
             setTempLimit(5)
         }
     }
+
+    const prevParams = new URLSearchParams(location.state)
+
     return (
         <div className="parts">
             <div className="control">
-
-                <Link to={`/${MODELS}/${model_id ? model_id : ''}?ordering=${sort}`} className="cars-marks__back button">Назад</Link>
+                <Link to={`/${MODELS}/${car_id ? car_id : ''}?${prevParams.toString()}`} className="cars-marks__back button">Назад</Link>
                 <Search
                     search={search}
                     goSearch={goSearch}
@@ -129,9 +131,9 @@ const Parts: React.FC<TParts> = () => {
                 />
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
-                    <select name="sorter" id="" onChange={handleOrderChange}>
-                        <option value="name" selected={sort === 'name'}>По алфавиту</option>
-                        <option value="-name" selected={sort === '-name'}>Обратно по алфавиту</option>
+                    <select name="sorter" id="" onChange={handleOrderChange} defaultValue={sort}>
+                        <option value="name" >По алфавиту</option>
+                        <option value="-name" >Обратно по алфавиту</option>
                     </select>
                 </div>
                 <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />

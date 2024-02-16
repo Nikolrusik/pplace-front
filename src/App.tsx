@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Categories from "./components/Categories";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
 
 import './styles/App.scss';
 import { MAIN, MODELS, PARTS } from "./constants/paths";
@@ -20,7 +20,6 @@ const App = (props: any) => {
         setIsAdmin(resp.data().ADMIN)
     })
 
-
     return (
         <>
             <h1>TEST | Марки </h1>
@@ -33,14 +32,14 @@ const App = (props: any) => {
 
                 </>
             }
-            <BrowserRouter >
+            <HashRouter>
                 <Routes>
                     <Route path={'*'} element={<Categories />} />
-                    <Route path={MODELS + '/:id'} element={<Models />} />
+                    <Route path={MODELS + '/:car_id'} element={<Models />} />
                     <Route path={PARTS} element={<Parts />} />
-                    <Route path={PARTS + '/:model_id'} element={<Parts />} />
+                    <Route path={MODELS + '/:car_id/:model_id/'} element={<Parts />} />
                 </Routes>
-            </BrowserRouter>
+            </HashRouter>
         </>
     )
 }

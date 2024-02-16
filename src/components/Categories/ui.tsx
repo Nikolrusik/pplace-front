@@ -119,7 +119,13 @@ const Categories = () => {
             setTempLimit(5)
         }
     }
-
+    const currentLocationState = {
+        'limit': limit,
+        'offset': offset,
+        'ordeing': sort,
+        'search': search,
+        'is_search': `${isSearch}`
+    }
     return (
         <div className="cars">
             <div className="control">
@@ -130,9 +136,9 @@ const Categories = () => {
                 />
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
-                    <select name="sorter" id="" onChange={handleOrderChange}>
-                        <option value="name" selected={sort === 'name'}>По алфавиту</option>
-                        <option value="-name" selected={sort === '-name'}>Обратно по алфавиту</option>
+                    <select name="sorter" id="" onChange={handleOrderChange} defaultValue={sort}>
+                        <option value="name" >По алфавиту</option>
+                        <option value="-name" >Обратно по алфавиту</option>
                     </select>
                 </div>
                 <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
@@ -144,6 +150,7 @@ const Categories = () => {
                             className="cars-categories__item"
                             to={`${MODELS}/${carMark.id}?ordering=${sort}`}
                             key={carMark.id}
+                            state={currentLocationState}
                         >
                             <img src={carMark.icon} alt="mark icon" />
                             <p className="cars-categories__item-name">{carMark.name}</p>

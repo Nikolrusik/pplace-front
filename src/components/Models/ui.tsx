@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { TModels } from "./types"
-import { Link, createSearchParams, useLocation, useParams, useSearchParams } from "react-router-dom"
+import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import BACKEND_URL from "../../constants/constants"
-import { MAIN, PARTS } from "../../constants/paths"
+import { MAIN, MODELS, PARTS } from "../../constants/paths"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
 import Settings from "../widgets/Settings"
@@ -14,7 +14,7 @@ type modes = {
 }
 
 const Models: React.FC<TModels> = () => {
-    const { id } = useParams()
+    const { car_id } = useParams()
     const [models, setModels] = useState<modes[]>([])
 
     const location = useLocation();
@@ -39,7 +39,7 @@ const Models: React.FC<TModels> = () => {
     const [_, setSearchParams] = useSearchParams()
 
     const fetchData = (limit?: number, offset?: number, search?: string) => {
-        axios.get(`${BACKEND_URL}/cars/marks_car/${id}/`, {
+        axios.get(`${BACKEND_URL}/cars/marks_car/${car_id}/`, {
             params: {
                 limit: limit,
                 offset: offset,
@@ -51,6 +51,7 @@ const Models: React.FC<TModels> = () => {
                 setTotal(resp.data.count)
                 setModels(resp.data.results)
             })
+            .catch(() => { })
     }
 
     useEffect(() => {
@@ -62,10 +63,10 @@ const Models: React.FC<TModels> = () => {
             ordering: sort
         })
         const newParams = createSearchParams(params)
-        setSearchParams(newParams)
+        setSearchParams(newParams, { state: location.state, replace: true })
 
         fetchData(limit, offset, isSearch ? search : '')
-    }, [offset, isSearch, sort])
+    }, [limit, offset, isSearch, sort])
 
 
     useEffect(() => {
@@ -114,10 +115,22 @@ const Models: React.FC<TModels> = () => {
             setTempLimit(5)
         }
     }
+
+    const currentLocationState = {
+        'limit': limit,
+        'offset': offset,
+        'ordeing': sort,
+        'search': search,
+        'is_search': `${isSearch}`
+    }
+
+    const prevParams = new URLSearchParams(location.state)
+
     return (
         <div className="cars-marks">
             <div className="control">
-                <Link to={MAIN + `?ordering=${sort}`} className="cars-marks__back button">Назад</Link>
+
+                <Link to={MAIN + `?${prevParams.toString()}`} className="cars-marks__back button">Назад</Link>
                 <Search
                     search={search}
                     goSearch={goSearch}
@@ -125,9 +138,9 @@ const Models: React.FC<TModels> = () => {
                 />
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
-                    <select name="sorter" id="" onChange={handleOrderChange}>
-                        <option value="name" selected={sort === 'name'}>По алфавиту</option>
-                        <option value="-name" selected={sort === '-name'}>Обратно по алфавиту</option>
+                    <select name="sorter" id="" onChange={handleOrderChange} defaultValue={sort}>
+                        <option value="name" >По алфавиту</option>
+                        <option value="-name" >Обратно по алфавиту</option>
                     </select>
                 </div>
 
@@ -137,9 +150,10 @@ const Models: React.FC<TModels> = () => {
                 {models.length > 0 &&
                     models.map((model) => (
                         <Link
-                            to={'/' + PARTS + '/' + id + `?ordering=${sort}`}
+                            to={'/' + MODELS + '/' + car_id + '/' + model.id + '/' + `?ordering=${sort}`}
                             className="cars-marks__mark"
                             key={model.id}
+                            state={currentLocationState}
                         >
                             {model.name}
                         </Link>
@@ -150,7 +164,8 @@ const Models: React.FC<TModels> = () => {
                     </div>
                 }
             </div>
-            {pages.length > 1 &&
+            {
+                pages.length > 1 &&
                 <Paginator
                     setOffset={setOffset}
                     limit={limit}
@@ -158,7 +173,7 @@ const Models: React.FC<TModels> = () => {
                     pages={pages}
                 />
             }
-        </div>
+        </div >
     )
 }
 
