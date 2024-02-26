@@ -4,6 +4,7 @@ import "./Categories.scss"
 import axios from "axios"
 import cars from "../../testdata/cars.json"
 import BACKEND_URL from "../../constants/constants";
+import API_TOKEN from "../../constants/tokens"
 import { Link, Outlet, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
 import { MODELS } from "../../constants/paths";
 import classNames from "classnames";
@@ -45,7 +46,10 @@ const Categories = () => {
     const fetchData = (limit?: number, offset?: number, search?: string) => {
         axios.get(BACKEND_URL + '/cars/cars/', {
             headers: {
+                Authorization: `Token ${API_TOKEN}`
             },
+            // headers: {
+            // },
             params: {
                 limit: limit,
                 offset: offset,

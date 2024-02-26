@@ -3,6 +3,7 @@ import { TModels } from "./types"
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import BACKEND_URL from "../../constants/constants"
+import API_TOKEN from "../../constants/tokens"
 import { MAIN, MODELS, PARTS } from "../../constants/paths"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
@@ -40,6 +41,9 @@ const Models: React.FC<TModels> = () => {
 
     const fetchData = (limit?: number, offset?: number, search?: string) => {
         axios.get(`${BACKEND_URL}/cars/marks_car/${car_id}/`, {
+            headers: {
+                'Authorization': `Token ${API_TOKEN}`
+            },
             params: {
                 limit: limit,
                 offset: offset,

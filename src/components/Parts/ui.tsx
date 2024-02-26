@@ -2,6 +2,7 @@ import "./Parts.scss"
 import axios from "axios"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import BACKEND_URL from "../../constants/constants"
+import API_TOKEN from "../../constants/tokens"
 import { Link, createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import Search from "../widgets/Search"
 import Paginator from "../widgets/Paginator"
@@ -43,6 +44,9 @@ const Parts: React.FC<TParts> = () => {
 
     const fetchData = (limit?: number, offset?: number, search?: string) => {
         axios.get(`${BACKEND_URL}/cars/parts/${model_id ? model_id + '/' : ''}`, {
+            headers: {
+                'Authorization': `Token ${API_TOKEN}`
+            },
             params: {
                 limit: limit,
                 offset: offset,
