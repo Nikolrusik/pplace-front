@@ -5,9 +5,8 @@ import axios from "axios"
 import cars from "../../testdata/cars.json"
 import BACKEND_URL from "../../constants/constants";
 import API_TOKEN from "../../constants/tokens"
-import { Link, Outlet, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
+import { Link, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
 import { MODELS } from "../../constants/paths";
-import classNames from "classnames";
 import Paginator from "../widgets/Paginator";
 import Search from "../widgets/Search";
 import Settings from "../widgets/Settings";
@@ -42,14 +41,13 @@ const Categories = () => {
 
     const [_, setSearchParams] = useSearchParams()
 
+    const headers = {
+        // 'Authorization': `Token ${API_TOKEN}`,
 
+    }
     const fetchData = (limit?: number, offset?: number, search?: string) => {
-        axios.get(BACKEND_URL + '/cars/cars/', {
-            headers: {
-                Authorization: `Token ${API_TOKEN}`
-            },
-            // headers: {
-            // },
+        axios.get(BACKEND_URL + '/cars/manufacturer/', {
+            headers: headers,
             params: {
                 limit: limit,
                 offset: offset,
@@ -128,7 +126,8 @@ const Categories = () => {
         'offset': offset,
         'ordeing': sort,
         'search': search,
-        'is_search': `${isSearch}`
+        'is_search': `${isSearch}`,
+        // 'type': type
     }
     return (
         <div className="cars">
