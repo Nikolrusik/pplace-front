@@ -14,20 +14,33 @@ const Paginator: React.FC<TPaginator> = (props) => {
 
     return (
         <div className="paginator">
-            {pages[0] !== currentPage &&
-                <div
-                    className="paginator__item"
-                    onClick={() => { setOffset((prev: number) => prev - limit) }}
+            <button
+                className={classNames('paginator__item', {
+                    'paginator__item--disabled': pages[0] === currentPage
+                })}
+                disabled={pages[0] === currentPage}
+                onClick={() => { setOffset((prev: number) => prev - limit) }}
+            >
+                prev
+            </button>
+            {pages.length > 1 &&
+                <div className={classNames('paginator__item', {
+                    'paginator__item--current': 1 === currentPage
+                })}
+
+                    onClick={() => {
+                        setOffset(0)
+                    }}
                 >
-                    prev
+                    1
                 </div>
             }
-            {pages.map((page) => (
-
+            {pages.slice(
+                currentPage > 3 ? currentPage - 3 : 1, currentPage + 2 < pages.length ? currentPage + 2 : pages.length - 1
+            ).map((page) => (
                 <div className={classNames('paginator__item', {
                     'paginator__item--current': page === currentPage
                 })}
-
                     onClick={() => {
                         setOffset(limit * (page - 1))
                     }}
@@ -36,14 +49,28 @@ const Paginator: React.FC<TPaginator> = (props) => {
                     {page}
                 </div>
             ))}
-            {pages.length !== currentPage &&
-                <div
-                    className="paginator__item"
-                    onClick={() => { setOffset((prev: number) => prev + limit) }}
+
+            {pages.length > limit &&
+                <div className={classNames('paginator__item', {
+                    'paginator__item--current': pages.length === currentPage
+                })}
+
+                    onClick={() => {
+                        setOffset(limit * (pages.length - 1))
+                    }}
                 >
-                    next
+                    {pages.length}
                 </div>
             }
+            <button
+                className={classNames('paginator__item', {
+                    'paginator__item--disabled': pages.length === currentPage
+                })}
+                disabled={pages.length === currentPage}
+                onClick={() => { setOffset((prev: number) => prev + limit) }}
+            >
+                next
+            </button>
         </div>
     )
 }

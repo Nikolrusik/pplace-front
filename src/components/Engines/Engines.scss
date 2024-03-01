@@ -1,0 +1,39 @@
+.engines {
+    margin: 0 auto;
+    max-width: 800px;
+
+    &__head {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__items {
+        width: 100%;
+        border-spacing: 0px;
+        border-collapse: collapse;
+    }
+
+    &__item {
+        background-color: #abbfff;
+
+        &-head {
+            background: none;
+        }
+
+        &:nth-child(2n) {
+            background-color: #d9e2ff;
+        }
+
+        &-col {
+            text-align: left;
+        }
+
+
+        &-head {
+
+            &-col {
+                font-weight: bold;
+            }
+        }
+    }
+}

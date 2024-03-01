@@ -1,32 +1,34 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-
-import "./Categories.scss"
-import axios from "axios"
-import cars from "../../testdata/cars.json"
+import { Link, createSearchParams, useLocation, useSearchParams } from "react-router-dom";
+import "./Cars.scss"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import BACKEND_URL from "../../constants/constants";
-import API_TOKEN from "../../constants/tokens"
-import { Link, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
-import { CARS, MAIN, MODELS } from "../../constants/paths";
-import Paginator from "../widgets/Paginator";
+import axios from "axios";
 import Search from "../widgets/Search";
+import Paginator from "../widgets/Paginator";
 import Settings from "../widgets/Settings";
+import { MANUFACTURERS } from "../../constants/paths";
 
-type cars = {
-    id: number
-    name: string,
-    icon: string,
+
+type car = {
+    id: number,
+    model: string,
+    modification: string,
+    transmission: string,
+    articul: string
 }
 
-const Categories = () => {
-    const [carMarks, setCarMarks] = useState<cars[]>([])
+const Cars: React.FC = () => {
+    const [cars, setCars] = useState<car[]>([])
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
 
-    const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 5
+    const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 15
     const currOffset = Number(queryParams.get('offset')) ? Number(queryParams.get('offset')) : 0
     const currOrdering = queryParams.get('ordering') ? queryParams.get('ordering') : 'name'
     const currIsSearch = queryParams.get('is_search') === 'true'
     const currSearch = queryParams.get('search') ? queryParams.get('search') : ''
+
+    const manufacturerId = queryParams.get('manufacturer')
 
     const [limit, setLimit] = useState(currLimit)
     const [offset, setOffset] = useState(currOffset)
@@ -46,18 +48,19 @@ const Categories = () => {
 
     }
     const fetchData = (limit?: number, offset?: number, search?: string) => {
-        axios.get(BACKEND_URL + '/cars/manufacturer/', {
+        axios.get(BACKEND_URL + '/cars/car/', {
             headers: headers,
             params: {
                 limit: limit,
                 offset: offset,
                 search: search,
-                ordering: sort
+                ordering: sort,
+                manufacturer: manufacturerId
             }
         })
             .then((resp) => {
                 setTotal(resp.data.count)
-                setCarMarks(resp.data?.results)
+                setCars(resp.data?.results)
 
             })
             .catch(() => { })
@@ -121,62 +124,62 @@ const Categories = () => {
             setTempLimit(5)
         }
     }
-    const currentLocationState = {
-        'limit': limit,
-        'offset': offset,
-        'ordeing': sort,
-        'search': search,
-        'is_search': `${isSearch}`,
-    }
+
+    const prevParams = new URLSearchParams(location.state)
+
     return (
         <div className="cars">
-            <div className="control">
-                <Link to={MAIN} className="cars-marks__back button">Назад</Link>
+            <div className="cars__head">
+
+                <Link to={'/' + MANUFACTURERS + `?${prevParams.toString()}`} className="cars-marks__back button">Назад</Link>
                 <Search
                     search={search}
                     goSearch={goSearch}
                     handleChange={handleInputChange}
                 />
+
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange} defaultValue={sort}>
-                        <option value="name" >По алфавиту</option>
-                        <option value="-name" >Обратно по алфавиту</option>
+                        <option value="articul" >По алфавиту</option>
+                        <option value="-articul" >Обратно по алфавиту</option>
                     </select>
                 </div>
                 <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
             </div>
-            <div className="cars-categories">
-                {carMarks.length > 0 &&
-                    carMarks.map((carMark) => (
-                        <Link
-                            className="cars-categories__item"
-                            to={`/${CARS}/?ordering=${sort}&manufacturer=${carMark.id}`}
-                            key={carMark.id}
-                            state={currentLocationState}
-                        >
-                            <img src={carMark.icon} alt="mark icon" />
-                            <p className="cars-categories__item-name">{carMark.name}</p>
-                        </Link>
-                    ))
-                }
-                {carMarks.length === 0 &&
-                    <div className="cart-categories__empty">
-                        Нет ни одной марки
-                    </div>
+            <div className="cars__content">
+                <table className="cars__items">
+                    <thead>
+                        <tr className="cars__item cars__item-head">
+                            <td className="cars__item-col cars__item-head-col">Артикул</td>
+                            <td className="cars__item-col cars__item-head-col">Модификация</td>
+                            <td className="cars__item-col cars__item-head-col">Модель</td>
+                            <td className="cars__item-col cars__item-head-col">КПП</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cars.map((car) => (
+                            <tr className="cars__item" key={car.id}>
+                                <td className="cars__item-col">{car.articul}</td>
+                                <td className="cars__item-col">{car.modification}</td>
+                                <td className="cars__item-col">{car.model}</td>
+                                <td className="cars__item-col">{car.transmission}</td>
+                            </tr>
+                        ))
+                        }
+                    </tbody>
+                </table>
+                {pages.length > 1 &&
+                    <Paginator
+                        setOffset={setOffset}
+                        limit={limit}
+                        currentPage={currentPage}
+                        pages={pages}
+                    />
                 }
             </div>
-            {pages.length > 1 &&
-                <Paginator
-                    setOffset={setOffset}
-                    limit={limit}
-                    currentPage={currentPage}
-                    pages={pages}
-                />
-            }
-            {/* <Outlet /> */}
-        </div >
+        </div>
     )
 }
 
-export default Categories
+export default Cars

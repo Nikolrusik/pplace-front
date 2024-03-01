@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import "./Main.scss"
 import React from "react"
-import { MANUFACTURERS } from "../../constants/paths"
+import { ENGINES, MANUFACTURERS } from "../../constants/paths"
 
 
 const Main: React.FC = () => {
@@ -12,11 +12,11 @@ const Main: React.FC = () => {
                 <h2 className="main_title">Выбор</h2>
             </div>
             <div className="main__select">
-                <Link to={``} className="main__select-item">
+                <Link to={`/${ENGINES}/`} className="main__select-item">
                     Двигатели
                 </Link>
-                <Link to={`${MANUFACTURERS}/?type=auto`} className="main__select-item">
-                    Автомобили
+                <Link to={`/${MANUFACTURERS}/`} className="main__select-item">
+                    Производители
                 </Link>
             </div>
         </div>
