@@ -174,8 +174,8 @@ const Cars: React.FC = () => {
                     <Paginator
                         setOffset={setOffset}
                         limit={limit}
-                        currentPage={currentPage}
-                        pages={pages}
+                        total={total}
+                        offset={offset}
                     />
                 }
             </div>

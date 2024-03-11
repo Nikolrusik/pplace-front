@@ -131,8 +131,8 @@ const Engines: React.FC = () => {
                     <Paginator
                         setOffset={setOffset}
                         limit={limit}
-                        currentPage={Math.floor(offset / limit) + 1}
-                        pages={Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)}
+                        total={total}
+                        offset={offset}
                     />
                 }
             </div>

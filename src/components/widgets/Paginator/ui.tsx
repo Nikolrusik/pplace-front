@@ -1,100 +1,60 @@
-import "./Paginator.scss";
-import classNames from "classnames";
-import React from "react";
-import { TPaginator } from "./types";
+import "./Paginator.scss"
+import React from "react"
+import { TPaginator } from "./types"
 
-const Paginator: React.FC<TPaginator> = ({ pages, currentPage, setOffset, limit }) => {
-    const isFirstPage = currentPage === 1;
-    const isLastPage = currentPage === pages.length;
 
-    const handlePrevClick = () => {
-        if (!isFirstPage) {
-            setOffset((prev: any) => prev - limit);
-        }
-    };
+const Paginator: React.FC<TPaginator> = (props) => {
+    const {
+        total,
+        limit,
+        offset,
+        setOffset
+    } = props
 
-    const handlePageClick = (pageNumber: number) => {
-        setOffset(limit * (pageNumber - 1));
-    };
+    const currentPage = Math.ceil(offset / limit + 1)
 
-    const handleNextClick = () => {
-        if (!isLastPage) {
-            setOffset((prev: any) => prev + limit);
-        }
-    };
 
-    const renderPageItems = () => {
-        const startIndex = Math.max(1, currentPage - 2);
-        const endIndex = Math.min(pages.length, currentPage + 2);
+    const totalPages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
 
-        const pageItems = Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index);
+    const for_min = currentPage <= 3 ? 6 : currentPage + 2
+    const for_max = currentPage + 2 > totalPages[totalPages.length - 2] ? totalPages[totalPages.length - 2] - 5 : currentPage - 3
 
-        // Убираем дубликаты на краях
-        if (pageItems[0] === 1) pageItems.shift();
-        if (pageItems[pageItems.length - 1] === pages.length) pageItems.pop();
+    const max_slice = currentPage + 2 > totalPages[totalPages.length - 2] ? totalPages.length - 1 : for_min
+    const min_slice = currentPage > 3 ? for_max : 1
 
-        return pageItems.map((page) => (
-            <div
-                key={page}
-                className={classNames('paginator__item', {
-                    'paginator__item--current': page === currentPage
-                })}
-                onClick={() => handlePageClick(page)}
-            >
-                {page}
-            </div>
-        ));
-    };
+    const changePage = (page: number) => {
+        const currOffset = page * limit - limit
+        setOffset(currOffset)
+    }
 
+    console.log(currentPage)
     return (
-        <div className="paginator">
-            <button
-                className={classNames('paginator__item', {
-                    'paginator__item--disabled': isFirstPage
-                })}
-                disabled={isFirstPage}
-                onClick={handlePrevClick}
-            >
-                prev
-            </button>
-            {pages.length > 1 && (
-                <div
-                    className={classNames('paginator__item', {
-                        'paginator__item--current': 1 === currentPage
-                    })}
-                    onClick={() => handlePageClick(1)}
-                >
-                    1
-                </div>
-            )}
-            {currentPage > 3 && (
-                <div className="paginator__item">...</div>
-            )}
-            {renderPageItems()}
-            {currentPage + 2 < pages.length && (
-                <div className="paginator__item">...</div>
-            )}
-            {pages.length > limit && (
-                <div
-                    className={classNames('paginator__item', {
-                        'paginator__item--current': pages.length === currentPage
-                    })}
-                    onClick={() => handlePageClick(pages.length)}
-                >
-                    {pages.length}
-                </div>
-            )}
-            <button
-                className={classNames('paginator__item', {
-                    'paginator__item--disabled': isLastPage
-                })}
-                disabled={isLastPage}
-                onClick={handleNextClick}
-            >
-                next
-            </button>
-        </div>
-    );
-};
 
-export default Paginator;
+        <div className="table_car__paginator">
+            <div className=""
+                onClick={() => changePage(currentPage - 1)}
+            >PREV</div>
+            <div onClick={() => changePage(1)}>
+                1   {1 === currentPage && '++'}
+            </div>
+            {totalPages.slice(min_slice, max_slice).map((i) => (
+                <div
+                    onClick={() => {
+                        changePage(i)
+                    }}
+                >
+                    {i} {i === currentPage && '++'}
+                </div>
+            ))
+            }
+            <div onClick={() => { changePage(totalPages.length) }}>
+                {totalPages.length}  {totalPages.length === currentPage && '++'}
+            </div>
+            <div className=""
+                onClick={() => changePage(currentPage + 1)}
+            >NEXT</div>
+        </div>
+    )
+}
+
+export default Paginator

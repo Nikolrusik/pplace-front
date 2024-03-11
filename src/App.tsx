@@ -12,6 +12,7 @@ import BACKEND_URL from "./constants/constants";
 import Main from "./components/Main";
 import Cars from "./components/Cars";
 import Engines from "./components/Engines";
+import TableApp from "./components/TableApp";
 
 const App = (props: any) => {
     const { BX24 } = props;
@@ -61,7 +62,7 @@ const App = (props: any) => {
                     <Route path={'*'} element={<ServerDown />} />
                     {serverAvailable &&
                         <>
-                            <Route path={MAIN} element={<Main />} />
+                            <Route path={MAIN} element={<TableApp />} />
                             <Route path={ENGINES} element={<Engines />} />
                             <Route path={MANUFACTURERS} element={<Categories />} />
                             <Route path={CARS} element={<Cars />} />

@@ -1,9 +1,8 @@
-import { SetStateAction } from "react"
 
 
 export type TPaginator = {
-    currentPage: number
-    pages: number[]
-    limit: number
-    setOffset: SetStateAction<any>
+    total: number,
+    limit: number,
+    offset: number,
+    setOffset: (e: number) => void
 }

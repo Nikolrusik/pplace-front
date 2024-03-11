@@ -1,3 +1,3 @@
-import Paginator from "./ui";
+import Paginator from "./ui"
 
 export default Paginator

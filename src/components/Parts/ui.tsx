@@ -159,8 +159,8 @@ const Parts: React.FC<TParts> = () => {
                 <Paginator
                     setOffset={setOffset}
                     limit={limit}
-                    currentPage={currentPage}
-                    pages={pages}
+                    total={total}
+                    offset={offset}
                 />
             }
         </div>

@@ -173,8 +173,8 @@ const Models: React.FC<TModels> = () => {
                 <Paginator
                     setOffset={setOffset}
                     limit={limit}
-                    currentPage={currentPage}
-                    pages={pages}
+                    total={total}
+                    offset={offset}
                 />
             }
         </div >
