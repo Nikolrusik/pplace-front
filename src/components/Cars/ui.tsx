@@ -7,6 +7,7 @@ import Search from "../widgets/Search";
 import Paginator from "../widgets/Paginator";
 import Settings from "../widgets/Settings";
 import { MANUFACTURERS } from "../../constants/paths";
+import API_TOKEN from "../../constants/tokens";
 
 
 type car = {
@@ -44,7 +45,7 @@ const Cars: React.FC = () => {
     const [_, setSearchParams] = useSearchParams()
 
     const headers = {
-        // 'Authorization': `Token ${API_TOKEN}`,
+        'Authorization': `Token ${API_TOKEN}`,
 
     }
     const fetchData = (limit?: number, offset?: number, search?: string) => {

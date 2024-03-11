@@ -42,7 +42,7 @@ const Models: React.FC<TModels> = () => {
     const fetchData = (limit?: number, offset?: number, search?: string) => {
         axios.get(`${BACKEND_URL}/cars/marks_car/${car_id}/`, {
             headers: {
-                // 'Authorization': `Token ${API_TOKEN}`
+                'Authorization': `Token ${API_TOKEN}`
             },
             params: {
                 limit: limit,

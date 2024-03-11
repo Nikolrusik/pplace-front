@@ -1,67 +1,42 @@
-import { Link, createSearchParams, useLocation, useSearchParams } from "react-router-dom";
-import "./Engines.scss"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import { MAIN } from "../../constants/paths";
+import "./Engines.scss";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Search from "../widgets/Search";
 import Settings from "../widgets/Settings";
 import Paginator from "../widgets/Paginator";
 import BACKEND_URL from "../../constants/constants";
 import axios from "axios";
+import API_TOKEN from "../../constants/tokens";
 
-type engine = {
-    id: number
-    name: string
-    volume: string
-    type_fuel: string
-    compression: string
-}
+type Engine = {
+    id: number;
+    name: string;
+    volume: string;
+    type_fuel: string;
+    compression: string;
+};
 
 const Engines: React.FC = () => {
+    const [engines, setEngines] = useState<Engine[]>([]);
+    const [limit, setLimit] = useState(15);
+    const [offset, setOffset] = useState(0);
+    const [search, setSearch] = useState('');
+    const [total, setTotal] = useState(0);
+    const [isSearch, setIsSearch] = useState(false);
+    const [sort, setSort] = useState('name');
+    const [tempLimit, setTempLimit] = useState(15);
 
-    const [engines, setEngines] = useState<engine[]>([])
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-
-    const currLimit = Number(queryParams.get('limit')) ? Number(queryParams.get('limit')) : 15
-    const currOffset = Number(queryParams.get('offset')) ? Number(queryParams.get('offset')) : 0
-    const currOrdering = queryParams.get('ordering') ? queryParams.get('ordering') : 'name'
-    const currIsSearch = queryParams.get('is_search') === 'true'
-    const currSearch = queryParams.get('search') ? queryParams.get('search') : ''
-
-    const [limit, setLimit] = useState(currLimit)
-    const [offset, setOffset] = useState(currOffset)
-    const [search, setSearch] = useState(currSearch)
-    const [total, setTotal] = useState(0)
-    const [isSearch, setIsSearch] = useState(currIsSearch)
-    const [sort, setSort] = useState(currOrdering)
-
-    const pages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
-    const currentPage = offset / limit + 1
-
-
-    const [_, setSearchParams] = useSearchParams()
-
-    const headers = {
-        // 'Authorization': `Token ${API_TOKEN}`,
-
-    }
-    const fetchData = (limit?: number, offset?: number, search?: string) => {
-        axios.get(BACKEND_URL + '/cars/engine/', {
-            headers: headers,
-            params: {
-                limit: limit,
-                offset: offset,
-                search: search,
-                ordering: sort,
-            }
+    const fetchData = (limit: number, offset: number, search: string) => {
+        axios.get(`${BACKEND_URL}/cars/engine/`, {
+            headers: { 'Authorization': `Token ${API_TOKEN}` },
+            params: { limit, offset, search, ordering: sort }
         })
             .then((resp) => {
-                setTotal(resp.data.count)
-                setEngines(resp.data?.results)
-
+                setTotal(resp.data.count);
+                setEngines(resp.data?.results || []);
             })
-            .catch(() => { })
-    }
+            .catch(() => { });
+    };
 
     useEffect(() => {
         const params = new URLSearchParams({
@@ -69,71 +44,59 @@ const Engines: React.FC = () => {
             offset: `${offset}`,
             search: isSearch ? search : '',
             ordering: sort
-        })
-        const newParams = createSearchParams(params)
-        setSearchParams(newParams)
+        });
+        const searchParamsString = params.toString();
+        const url = `${window.location.pathname}?${searchParamsString}`;
+        window.history.pushState({ path: url }, '', url);
 
-        fetchData(limit, offset, isSearch ? search : '')
-    }, [offset, limit, isSearch, sort])
-
+        fetchData(limit, offset, isSearch ? search : '');
+    }, [offset, limit, isSearch, sort]);
 
     useEffect(() => {
-        if (currLimit) {
-            setLimit(currLimit)
-        }
-        if (currOffset && currOffset >= pages[0] && currOffset <= pages.length)
-            setOffset(currOffset)
-
-    }, [currLimit, currOffset])
-
+        setLimit(parseInt(new URLSearchParams(window.location.search).get('limit') || '15', 10));
+        setOffset(parseInt(new URLSearchParams(window.location.search).get('offset') || '0', 10));
+        setSearch(new URLSearchParams(window.location.search).get('search') || '');
+        setIsSearch(new URLSearchParams(window.location.search).get('is_search') === 'true');
+        setSort(new URLSearchParams(window.location.search).get('ordering') || 'name');
+    }, []);
 
     const goSearch = () => {
-        if (search !== '') {
-            setIsSearch(true)
-        } else {
-            setIsSearch(false)
-        }
-        setOffset(0)
-        fetchData(limit, offset, isSearch ? search : '')
-    }
+        setIsSearch(search !== '');
+        setOffset(0);
+        fetchData(limit, 0, isSearch ? search : '');
+    };
 
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    };
 
-    const handleInputChange = (event: any) => {
-        const input = event.target.value
-        setSearch(input)
-    }
-    const handleOrderChange = (event: any) => {
-        const val = event.target.value
-        setOffset(0)
-        setSort(val)
-    }
-    const [tempLimit, setTempLimit] = useState(limit)
-    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const val = Number(event.target.value)
-        setTempLimit(val)
-    }
+    const handleOrderChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setSort(event.target.value);
+        setOffset(0);
+    };
 
-    const saveLimit = () => {
+    const handleLimitChange = () => {
         if (tempLimit > 0) {
-            setLimit(tempLimit)
+            setLimit(tempLimit);
         } else {
-            setLimit(5)
-            setTempLimit(5)
+            setLimit(5);
+            setTempLimit(5);
         }
-    }
+    };
 
+    const handleTempLimitChange = (event: any) => {
+        setTempLimit(event.target.value)
+    }
 
     return (
         <div className="engines">
             <div className="engines__head">
-
-                <Link to={MAIN} className="engines-marks__back button">Назад</Link>
+                <Link to="/" className="engines-marks__back button">Назад</Link>
                 <Search
                     search={search}
                     goSearch={goSearch}
                     handleChange={handleInputChange}
                 />
-
                 <div className="sorting">
                     <div className="option-title">Сортировка</div>
                     <select name="sorter" id="" onChange={handleOrderChange} defaultValue={sort}>
@@ -141,7 +104,7 @@ const Engines: React.FC = () => {
                         <option value="-name" >Обратно по алфавиту</option>
                     </select>
                 </div>
-                <Settings handleChange={handleLimitChange} value={tempLimit} onSave={saveLimit} />
+                <Settings handleChange={handleTempLimitChange} value={tempLimit} onSave={handleLimitChange} />
             </div>
             <div className="engines__content">
                 <table className="engines__items">
@@ -161,21 +124,20 @@ const Engines: React.FC = () => {
                                 <td className="engines__item-col">{engine.type_fuel}</td>
                                 <td className="engines__item-col">{engine.volume}</td>
                             </tr>
-                        ))
-                        }
+                        ))}
                     </tbody>
                 </table>
-                {pages.length > 1 &&
+                {total > limit &&
                     <Paginator
                         setOffset={setOffset}
                         limit={limit}
-                        currentPage={currentPage}
-                        pages={pages}
+                        currentPage={Math.floor(offset / limit) + 1}
+                        pages={Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)}
                     />
                 }
             </div>
         </div>
-    )
+    );
 }
 
-export default Engines
+export default Engines;

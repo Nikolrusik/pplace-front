@@ -4,12 +4,12 @@ import "./Categories.scss"
 import axios from "axios"
 import cars from "../../testdata/cars.json"
 import BACKEND_URL from "../../constants/constants";
-import API_TOKEN from "../../constants/tokens"
 import { Link, createSearchParams, useSearchParams, useLocation } from "react-router-dom";
 import { CARS, MAIN, MODELS } from "../../constants/paths";
 import Paginator from "../widgets/Paginator";
 import Search from "../widgets/Search";
 import Settings from "../widgets/Settings";
+import API_TOKEN from "../../constants/tokens";
 
 type cars = {
     id: number
@@ -42,7 +42,7 @@ const Categories = () => {
     const [_, setSearchParams] = useSearchParams()
 
     const headers = {
-        // 'Authorization': `Token ${API_TOKEN}`,
+        'Authorization': `Token ${API_TOKEN}`,
 
     }
     const fetchData = (limit?: number, offset?: number, search?: string) => {
