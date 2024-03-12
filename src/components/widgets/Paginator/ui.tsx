@@ -1,6 +1,7 @@
 import "./Paginator.scss"
 import React from "react"
 import { TPaginator } from "./types"
+import classNames from "classnames"
 
 
 const Paginator: React.FC<TPaginator> = (props) => {
@@ -8,12 +9,12 @@ const Paginator: React.FC<TPaginator> = (props) => {
         total,
         limit,
         offset,
-        setOffset
+        setOffset,
+        className,
+        classNameButton,
     } = props
 
     const currentPage = Math.ceil(offset / limit + 1)
-
-
     const totalPages = Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1);
 
     const for_min = currentPage <= 3 ? 6 : currentPage + 2
@@ -27,32 +28,56 @@ const Paginator: React.FC<TPaginator> = (props) => {
         setOffset(currOffset)
     }
 
-    console.log(currentPage)
+    const hasNext = currentPage < totalPages.length
+    const hasPrev = Boolean(totalPages.length) && currentPage > totalPages[0]
+
     return (
 
-        <div className="table_car__paginator">
-            <div className=""
-                onClick={() => changePage(currentPage - 1)}
-            >PREV</div>
-            <div onClick={() => changePage(1)}>
-                1   {1 === currentPage && '++'}
-            </div>
-            {totalPages.slice(min_slice, max_slice).map((i) => (
-                <div
-                    onClick={() => {
-                        changePage(i)
-                    }}
+        <div className={classNames(className, "paginator")}>
+            <div className="paginator__wrapper">
+                <button className={classNames(classNameButton, "paginator__button")}
+                    onClick={() => changePage(currentPage - 1)}
+                    disabled={!hasPrev}
                 >
-                    {i} {i === currentPage && '++'}
-                </div>
-            ))
-            }
-            <div onClick={() => { changePage(totalPages.length) }}>
-                {totalPages.length}  {totalPages.length === currentPage && '++'}
+                    PREV
+                </button>
+
+                <button
+                    className={classNames(classNameButton, "paginator__button", {
+                        'is-selected': 1 === currentPage,
+                    })}
+                    onClick={() => changePage(1)}>
+                    1
+                </button>
+                {totalPages.slice(min_slice, max_slice).map((i) => (
+                    <button
+                        key={i}
+                        className={classNames(classNameButton, "paginator__button", {
+                            'is-selected': i === currentPage,
+                        })}
+                        onClick={() => {
+                            changePage(i)
+                        }}
+                    >
+                        {i}
+                    </button>
+                ))
+                }
+                <button
+                    className={classNames(classNameButton, "paginator__button", {
+                        'is-selected': totalPages.length === currentPage,
+                    })}
+                    onClick={() => { changePage(totalPages.length) }}>
+                    {totalPages.length}
+                </button>
+                <button
+                    className={classNames(classNameButton, "paginator__button")}
+                    onClick={() => changePage(currentPage + 1)}
+                    disabled={!hasNext}
+                >
+                    NEXT
+                </button>
             </div>
-            <div className=""
-                onClick={() => changePage(currentPage + 1)}
-            >NEXT</div>
         </div>
     )
 }

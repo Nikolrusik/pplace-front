@@ -5,4 +5,6 @@ export type TPaginator = {
     limit: number,
     offset: number,
     setOffset: (e: number) => void
+    className?: string
+    classNameButton?: string
 }

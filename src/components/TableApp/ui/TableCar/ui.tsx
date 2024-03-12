@@ -1,86 +1,118 @@
 import "./TableCar.scss"
-import React, { useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import classNames from "classnames"
 import { TCar } from "./types"
 import axios from "axios"
 import BACKEND_URL from "../../../../constants/constants"
 import API_TOKEN from "../../../../constants/tokens"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, createSearchParams } from "react-router-dom"
 import queryString from "query-string"
 import Paginator from "../../../widgets/Paginator/ui"
+import TableControl from "../../widgets/TableControl"
 
 
 const TableCar: React.FC = () => {
     const [cars, setCars] = useState<TCar[]>([])
-    const [isLoading, setIsLoading] = useState(false)
+
     const { search } = useLocation()
     const navigate = useNavigate()
-    const queryParams = queryString.parse(search)
+
+    const currentParams: any = queryString.parse(search)
+    const queryParams = queryString.parse(currentParams.left_table)
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [toUpdate, setToUpdate] = useState(true)
 
     const [total, setTotal] = useState(0)
-    const [limit, setLimit] = useState(10)
-    const [offset, setOffset] = useState(30)
-    const [isSearch, setIsSearch] = useState(false)
 
-    const defaultParams = {
-        is_search: isSearch,
-        limit: limit,
-        offset: offset,
+    const [params, setParams] = useState<any>({
+        is_search: String('false'),
+        limit: String('10'),
+        offset: String('0'),
         ordering: 'id',
         search: '',
-    }
+        ...queryParams
+    })
+
+    useEffect(() => {
+        const firstParams = {
+            ...currentParams,
+            left_table: createSearchParams(params).toString()
+        }
+        const actuallySearchParams = createSearchParams(firstParams).toString()
+        navigate(
+            {
+                pathname: ".",
+                search: actuallySearchParams,
+            },
+            { replace: false }
+        )
+        if (!(JSON.stringify(queryParams) === JSON.stringify(params))) {
+            setToUpdate(true)
+        }
+    }, [params])
 
     const fetchData = () => {
-        const dataServices = { ...defaultParams, ...queryParams }
+        const dataServices = { ...queryParams, ...params }
         setIsLoading(true)
         axios.get(`${BACKEND_URL}/cars/lynx_car/`, {
             headers: { 'Authorization': `Token ${API_TOKEN}` },
-            // params: { limit, offset, search, ordering: sort }
             params: { ...dataServices }
         }).then((resp) => {
             setCars(resp.data.results)
             setTotal(resp.data.count)
-        })
+            setToUpdate(false)
+        }).catch(() => { })
             .finally(() => setIsLoading(false))
-        // .catch(() => { })
     }
 
     useEffect(() => {
-        fetchData()
-    }, [offset])
+        if (toUpdate) {
+            fetchData()
+        }
 
+    }, [toUpdate])
 
-
+    const onSubmit = (e: any) => {
+        e.preventDefault()
+        setParams((prevParams: any) => ({
+            ...prevParams,
+            is_search: String(!!e.target.search.value),
+            search: !!e.target.search.value ? e.target.search.value : '',
+            limit: String(e.target?.car_limit.value),
+        }))
+    }
+    console.log(params)
+    console.log(queryParams)
     return (
+
         <div className="table_car">
-            <div className={classNames("table_filters", 'table_car__filters')}>
-                <div className="table_filters__search">
-                    <input type="text" />
-                </div>
-                <div className="table_filters__selectors">
-                    <select name="a" id="a">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <select name="a" id="a">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-            </div>
+            <h1> {isLoading ? 'Загружается' : 'А'}</h1>
             <div className="table_car__content">
+                <div className="">
+                    <TableControl
+                        onSubmit={onSubmit}
+                        params={params}
+                        setParams={setParams}
+                        className="table_car__filters"
+                    />
+                    <Paginator
+                        limit={params.limit}
+                        offset={params.offset}
+                        setOffset={(e: number) => setParams((prevParams: any) => ({ ...prevParams, offset: String(e) }))}
+                        total={total}
+                    />
+                </div>
                 <table>
                     <thead>
                         <tr>
-                            <td>id</td>
+                            {/* <td>id</td>
                             <td>manufacturer</td>
                             <td>md5_code</td>
                             <td>model</td>
                             <td>engine_char</td>
                             <td>power</td>
-                            <td>year</td>
+                            <td>year</td> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -97,14 +129,8 @@ const TableCar: React.FC = () => {
                         ))}
                     </tbody>
                 </table>
-                <Paginator
-                    limit={limit}
-                    offset={offset}
-                    setOffset={setOffset}
-                    total={total}
-                />
             </div>
-        </div>
+        </div >
     )
 }
 

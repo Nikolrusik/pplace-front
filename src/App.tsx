@@ -42,7 +42,7 @@ const App = (props: any) => {
         return () => clearInterval(interval);
     }, [serverAvailable])
 
-    console.log(serverAvailable)
+    // console.log(serverAvailable)
 
     return (
         <>
