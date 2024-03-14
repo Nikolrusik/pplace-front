@@ -1,6 +1,5 @@
 import "./TableCar.scss"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import classNames from "classnames"
+import React, { useEffect, useState } from "react"
 import { TCar } from "./types"
 import axios from "axios"
 import BACKEND_URL from "../../../../constants/constants"
@@ -9,6 +8,7 @@ import { useLocation, useNavigate, createSearchParams } from "react-router-dom"
 import queryString from "query-string"
 import Paginator from "../../../widgets/Paginator/ui"
 import TableControl from "../../widgets/TableControl"
+import TableToManyTables from "../TableToManyTables"
 
 
 const TableCar: React.FC = () => {
@@ -67,10 +67,7 @@ const TableCar: React.FC = () => {
     }
 
     useEffect(() => {
-        if (toUpdate) {
-            fetchData()
-        }
-
+        if (toUpdate) { fetchData() }
     }, [toUpdate])
 
     const onSubmit = (e: any) => {
@@ -82,10 +79,21 @@ const TableCar: React.FC = () => {
             limit: String(e.target?.car_limit.value),
         }))
     }
-    console.log(params)
-    console.log(queryParams)
-    return (
 
+    const [settings, updateSettings] = useState({
+        id: true,
+        manufacturer: {
+            name: true,
+            id: false
+        },
+        md5_code: true,
+        model: false,
+        power: false,
+        engine_char: true,
+        year: true
+    })
+
+    return (
         <div className="table_car">
             <h1> {isLoading ? 'Загружается' : 'А'}</h1>
             <div className="table_car__content">
@@ -103,34 +111,13 @@ const TableCar: React.FC = () => {
                         total={total}
                     />
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            {/* <td>id</td>
-                            <td>manufacturer</td>
-                            <td>md5_code</td>
-                            <td>model</td>
-                            <td>engine_char</td>
-                            <td>power</td>
-                            <td>year</td> */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cars.map((car) => (
-                            <tr key={car.id}>
-                                <td>{car.id}</td>
-                                <td>{car.manufacturer.name}</td>
-                                <td>{car.md5_code}</td>
-                                <td>{car.model}</td>
-                                <td>{car.engine_char}</td>
-                                <td>{car.power}</td>
-                                <td>{car.year}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <TableToManyTables
+                    defaultSettings={settings}
+                    data={cars}
+                    updateSettings={updateSettings}
+                />
             </div>
-        </div >
+        </div>
     )
 }
 

@@ -6,11 +6,13 @@ export type TManufacturer = {
 }
 
 export type TCar = {
-    id: number
-    manufacturer: TManufacturer
-    md5_code: string
-    model: string
-    engine_char: string
-    power: string
-    year: string
+    // id: number
+    // manufacturer: TManufacturer
+    // md5_code: string
+    // model: string
+    // engine_char: string
+    // power: string
+    // year: string
+
+    [field: string]: any
 }

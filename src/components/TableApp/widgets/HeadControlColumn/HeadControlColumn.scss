@@ -1,0 +1,21 @@
+.headcontrol_column {
+    &__name {
+        padding: 0 3px;
+        // background: red;
+    }
+
+    &.is-open &__name {
+        border-bottom: 1px solid black;
+    }
+
+    // &.is-selected {
+    //     .headcontrol_column__name {
+    //         background: green;
+    //     }
+    // }
+
+
+    &__child {
+        margin-left: 5px;
+    }
+}

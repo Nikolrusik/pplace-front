@@ -1,0 +1,25 @@
+import React, { ReactElement, ReactNode } from "react";
+
+
+function getColumn(column: any, obj: any, settings: any): ReactElement {
+    let result;
+    const columnType = typeof settings[column]
+    if (columnType === 'object') {
+        const keys = Object.keys(settings[column])
+        for (const i in keys) {
+            if (!result)
+                result = getColumn(keys[i], obj[column], settings[column])
+        }
+    } else {
+        if (settings[column]) {
+            result = <td key={column}>{obj[column]} </td>
+        }
+    }
+
+    return result
+}
+
+
+export default (
+    getColumn
+)
