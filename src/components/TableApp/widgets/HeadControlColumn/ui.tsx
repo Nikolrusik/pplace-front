@@ -18,7 +18,7 @@ const HeadControlColumn: React.FC<THeadControlColumn> = (props) => {
 
     const [openChild, setIsOpenChild] = useState(false)
 
-    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleClick = (event: React.FormEvent<HTMLDivElement>) => {
         event.stopPropagation();
         onClick(parentColumn, isParent ? null : name, setIsOpenChild)
     }
@@ -33,7 +33,11 @@ const HeadControlColumn: React.FC<THeadControlColumn> = (props) => {
             onClick={handleClick}>
             {typeof settings === "object" ? (
                 <>
-                    <span className={classNames("headcontrol_column__name")}>{parentColumn ? parentColumn : null}</span>
+                    <span className={classNames("headcontrol_column__name", {
+                        'is-selected': isSelected
+                    })}>
+                        {parentColumn ? parentColumn : null}
+                    </span>
                     {openChild &&
                         <div className={classNames("headcontrol_column__child")}>
                             {Object.keys(settings).map((subColumn: string, index: number) => (
@@ -51,7 +55,11 @@ const HeadControlColumn: React.FC<THeadControlColumn> = (props) => {
                     }
                 </>
             ) : (
-                <span className={classNames("headcontrol_column__name")}>{name}</span>
+                <span className={classNames("headcontrol_column__name", {
+                    'is-selected': isSelected
+                })}>
+                    {name}
+                </span>
             )}
         </div>
     );

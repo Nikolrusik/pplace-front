@@ -1,8 +1,12 @@
 .table_field_settings {
     display: flex;
-    justify-content: start;
+    flex-direction: column;
     gap: 10px;
     border-radius: 5px;
-    background: #a5b0b4;
     width: 100%;
+
+    &__columns {
+        display: flex;
+        flex-wrap: wrap;
+    }
 }

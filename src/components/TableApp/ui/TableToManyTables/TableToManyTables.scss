@@ -1,0 +1,25 @@
+.tbl {
+    overflow: auto;
+    width: 100%;
+
+    tbody {
+        position: relative;
+        min-height: 200px;
+    }
+
+    .item {
+        &.is-opened {
+            background: red;
+        }
+
+        &__empty {
+            text-align: center;
+            min-height: 200px;
+
+            &__content {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}

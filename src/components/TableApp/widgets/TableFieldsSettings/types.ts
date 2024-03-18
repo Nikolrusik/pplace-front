@@ -1,7 +1,8 @@
+import React from "react"
 
 
 export type TTableFieldsSettings = {
     className?: string
     currentSettings: any
-    fieldClickHandler: (parentColumn: string, subColumn?: string, openChild?: any) => void
+    updateSettings: React.Dispatch<React.SetStateAction<any>>
 }

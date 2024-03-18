@@ -4,6 +4,15 @@
             display: flex;
             justify-content: space-between;
 
+            &__table {
+                max-width: 50%;
+                width: 100%;
+            }
+        }
+
+        .create_connection {
+            border: 1px solid black;
+            height: 50px;
         }
     }
 }

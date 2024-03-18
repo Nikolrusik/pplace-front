@@ -34,50 +34,52 @@ const Paginator: React.FC<TPaginator> = (props) => {
     return (
 
         <div className={classNames(className, "paginator")}>
-            <div className="paginator__wrapper">
-                <button className={classNames(classNameButton, "paginator__button")}
-                    onClick={() => changePage(currentPage - 1)}
-                    disabled={!hasPrev}
-                >
-                    PREV
-                </button>
-
-                <button
-                    className={classNames(classNameButton, "paginator__button", {
-                        'is-selected': 1 === currentPage,
-                    })}
-                    onClick={() => changePage(1)}>
-                    1
-                </button>
-                {totalPages.slice(min_slice, max_slice).map((i) => (
-                    <button
-                        key={i}
-                        className={classNames(classNameButton, "paginator__button", {
-                            'is-selected': i === currentPage,
-                        })}
-                        onClick={() => {
-                            changePage(i)
-                        }}
+            {totalPages.length > 1 &&
+                <div className="paginator__wrapper">
+                    <button className={classNames(classNameButton, "paginator__button")}
+                        onClick={() => changePage(currentPage - 1)}
+                        disabled={!hasPrev}
                     >
-                        {i}
+                        PREV
                     </button>
-                ))
-                }
-                <button
-                    className={classNames(classNameButton, "paginator__button", {
-                        'is-selected': totalPages.length === currentPage,
-                    })}
-                    onClick={() => { changePage(totalPages.length) }}>
-                    {totalPages.length}
-                </button>
-                <button
-                    className={classNames(classNameButton, "paginator__button")}
-                    onClick={() => changePage(currentPage + 1)}
-                    disabled={!hasNext}
-                >
-                    NEXT
-                </button>
-            </div>
+                    <button
+                        className={classNames(classNameButton, "paginator__button", {
+                            'is-selected': 1 === currentPage,
+                        })}
+                        onClick={() => changePage(1)}>
+                        1
+                    </button>
+                    {totalPages.slice(min_slice, max_slice).map((i) => (
+                        <button
+                            key={i}
+                            className={classNames(classNameButton, "paginator__button", {
+                                'is-selected': i === currentPage,
+                            })}
+                            onClick={() => {
+                                changePage(i)
+                            }}
+                        >
+                            {i}
+                        </button>
+                    ))
+                    }
+                    <button
+                        className={classNames(classNameButton, "paginator__button", {
+                            'is-selected': totalPages.length === currentPage,
+                        })}
+                        onClick={() => { changePage(totalPages.length) }}>
+                        {totalPages.length}
+                    </button>
+                    <button
+                        className={classNames(classNameButton, "paginator__button")}
+                        onClick={() => changePage(currentPage + 1)}
+                        disabled={!hasNext}
+                    >
+                        NEXT
+                    </button>
+
+                </div>
+            }
         </div>
     )
 }
