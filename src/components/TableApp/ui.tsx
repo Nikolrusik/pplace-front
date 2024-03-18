@@ -44,10 +44,15 @@ const TableApp: React.FC = () => {
     const [selectedProducts, setSelectedProducts] = useState([])
     const [openedCar, setOpenedCar] = useState<null | number>(null)
 
-    const carOutsideFilters = {
-        'cars': openedCar ? openedCar : '',
-        'offset': 0,
-    }
+    const [carOutsideFilters, setCarOutsideFilters] = useState({})
+
+    useEffect(() => {
+        if (openedCar) {
+            setCarOutsideFilters({ 'cars': openedCar })
+        } else {
+            setCarOutsideFilters({ 'cars': '' })
+        }
+    }, [openedCar])
 
     const handleClickMakeRelation = (e: any) => {
         const data = {

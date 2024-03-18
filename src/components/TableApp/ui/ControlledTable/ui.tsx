@@ -33,7 +33,7 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     const navigate = useNavigate()
 
     const currentParams: any = queryString.parse(search)
-    const queryParams = queryString.parse(currentParams.left_table)
+    const queryParams = queryString.parse(currentParams[tableName])
 
     const [isLoading, setIsLoading] = useState(false)
     const [toUpdate, setToUpdate] = useState(true)
@@ -52,7 +52,7 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     useEffect(() => {
         const firstParams = {
             ...currentParams,
-            left_table: createSearchParams(params).toString()
+            [tableName]: createSearchParams(params).toString()
         }
         const actuallySearchParams = createSearchParams(firstParams).toString()
         navigate(
@@ -73,7 +73,7 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
         setIsLoading(true)
         axios.get(`${BACKEND_URL}${endpoint}`, {
             headers: { 'Authorization': `Token ${API_TOKEN}` },
-            params: { ...dataServices, ...outsideFilters }
+            params: { ...dataServices }
         }).then((resp) => {
             setData(resp.data.results)
             setTotal(resp.data.count)
@@ -87,8 +87,12 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
         if (toUpdate) { fetchData() }
     }, [toUpdate])
 
+
     useEffect(() => {
         setToUpdate(true)
+        setParams((prev: any) => {
+            return { ...prev, ...outsideFilters }
+        })
     }, [outsideFilters])
 
     const onSubmit = (e: any) => {
