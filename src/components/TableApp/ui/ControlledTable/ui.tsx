@@ -135,7 +135,9 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
                     />
                     <div className="">
                         <span>Выбрано элементов: {selectedItems.length} </span>
-                        <button onClick={() => { setSelectedItems([]) }}>Сбросить</button>
+                        {selectedItems.length > 0 &&
+                            <button onClick={() => { setSelectedItems([]) }}>Сбросить</button>
+                        }
                     </div>
                     <div className="">
                         Всего элементов: {total}
