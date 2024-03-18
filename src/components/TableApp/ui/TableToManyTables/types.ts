@@ -10,4 +10,6 @@ export type TTableToManyTables = {
     outsideFilters?: {
         [field: string]: any
     }
+    setOrdering?: (order_field: string) => void
+    currentOrdering?: string
 }

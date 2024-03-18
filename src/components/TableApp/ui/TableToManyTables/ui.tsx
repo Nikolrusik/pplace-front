@@ -13,7 +13,9 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
         selectedItems,
         setSelectedItems,
         openedItem,
-        setOpenedItem
+        setOpenedItem,
+        setOrdering,
+        currentOrdering
     } = props;
 
 
@@ -21,6 +23,7 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
     const viewColumns = allColumns.filter((x) => defaultSettings[x]);
 
     const handleChangeSelect = (e: any) => {
+        e?.stopPropagation()
         const id = Number(e.target.value)
         setSelectedItems((prevValue: any) => {
             if (prevValue.includes(id)) {
@@ -42,7 +45,11 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
                 <thead>
                     <tr>
                         <td>#</td>
-                        <Table settingObject={defaultSettings} />
+                        <Table
+                            settingObject={defaultSettings}
+                            setOrdering={setOrdering}
+                            currentOrdering={currentOrdering}
+                        />
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +60,7 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
                                     "is-opened": openedItem === item.id
                                 })}
                                 key={item.id}
-                                onClick={() => handleClick(item.id)}>
+                            >
                                 <td>
                                     <input
                                         type="checkbox"
@@ -63,7 +70,10 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
                                     />
                                 </td>
                                 {viewColumns.map((column, index) => (
-                                    <td key={index}>
+                                    <td key={index}
+                                        onClick={() => handleClick(item.id)}
+
+                                    >
                                         {getColumn(column, item, defaultSettings)}
                                     </td>
                                 ))}

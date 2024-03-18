@@ -102,19 +102,25 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     }
 
     useEffect(() => {
-        const localSettings: Object = JSON.parse(localStorage.getItem(`${tableName}__settings`))
-        console.log(tableName, localSettings)
-        console.log(tableName, settings)
-        console.log(localSettings == settings)
-        // if (localSettings) {
-        //     if 
-        // }
-        // localStorage.setItem(`${tableName}__settings`, JSON.stringify(settings))
+        const storedSettings = localStorage.getItem(`${tableName}__settings`);
+        if (storedSettings) {
+            updateSettings(JSON.parse(storedSettings));
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem(`${tableName}__settings`, JSON.stringify(settings));
     }, [settings])
+
+    const setOrdering = (order_field: string) => {
+        setParams((prevParams: any) => {
+            return { ...prevParams, ordering: order_field }
+        })
+    }
 
     return (
         <div className={classNames(tableName, 'controlled_table')}>
-            <h1> {isLoading ? 'Загружается' : 'А'}</h1>
+            <h1> {isLoading ? 'Загружается' : tableName}</h1>
             <div className="table_car__content">
                 <div className="">
                     <TableFieldsSettings
@@ -142,6 +148,9 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
                     <div className="">
                         Всего элементов: {total}
                     </div>
+                    <div className="">
+                        Сортировка по {params?.ordering}
+                    </div>
                 </div>
                 <TableToManyTables
                     defaultSettings={settings}
@@ -151,6 +160,8 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
                     setSelectedItems={setSelectedItems}
                     openedItem={openedItem}
                     setOpenedItem={setOpenedItem}
+                    setOrdering={setOrdering}
+                    currentOrdering={params?.ordering}
                 />
             </div>
         </div>

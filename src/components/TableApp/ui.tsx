@@ -44,19 +44,14 @@ const TableApp: React.FC = () => {
     const [selectedProducts, setSelectedProducts] = useState([])
     const [openedCar, setOpenedCar] = useState<null | number>(null)
 
-    useEffect(() => {
-        console.log(selectedCars)
-    }, [selectedCars])
-
     const carOutsideFilters = {
-        'cars': openedCar ? openedCar : ''
+        'cars': openedCar ? openedCar : '',
+        'offset': 0,
     }
 
     const handleClickMakeRelation = (e: any) => {
         const data = {
             email: "admin@admin.ru",
-            first_name: "ad",
-            last_name: "min",
             car_ids: selectedCars,
             product_ids: selectedProducts
         }
