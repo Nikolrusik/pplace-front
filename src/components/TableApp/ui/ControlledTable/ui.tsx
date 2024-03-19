@@ -38,7 +38,7 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [toUpdate, setToUpdate] = useState(true)
 
-    const [initialMount, setInitialMount] = useState(false)
+    // const [initialMount, setInitialMount] = useState(false)
 
     const [total, setTotal] = useState(0)
 
@@ -98,13 +98,15 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
             is_search: String(!!e.target.search.value),
             search: !!e.target.search.value ? e.target.search.value : '',
             limit: String(e.target?.car_limit.value),
+            offset: !!e.target.search.value && (!!e.target.search.value != prevParams.is_search) ? String('0') : prevParams.offset
         }))
     }
 
     useEffect(() => {
         const storedSettings = localStorage.getItem(`${tableName}__settings`);
+
         if (storedSettings) {
-            updateSettings(JSON.parse(storedSettings));
+            updateSettings((prev: any) => ({ ...prev, ...JSON.parse(storedSettings) }));
         }
     }, []);
 
