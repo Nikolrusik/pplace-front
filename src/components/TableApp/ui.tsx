@@ -9,6 +9,7 @@ import API_TOKEN from "../../constants/tokens";
 const TableApp: React.FC = () => {
     const [carSettings, setCarSettings] = useState({
         id: true,
+        manufacturer: true,
         model: true,
         generation: true,
         region: true,

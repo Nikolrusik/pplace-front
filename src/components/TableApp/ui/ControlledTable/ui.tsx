@@ -38,6 +38,8 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [toUpdate, setToUpdate] = useState(true)
 
+    const [initialMount, setInitialMount] = useState(false)
+
     const [total, setTotal] = useState(0)
 
     const [params, setParams] = useState<any>({
@@ -115,24 +117,20 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
             return { ...prevParams, ordering: order_field }
         })
     }
-    const [initialMount, setInitialMount] = useState(true); // Добавляем состояние для отслеживания первоначального монтирования
 
     useEffect(() => {
-        setInitialMount(true)
-        if (initialMount) {
-            const keys = Object.keys(outsideFilters)
-            for (const i of keys) {
-                if (params[i] !== outsideFilters[i]) {
-                    setParams((prev: any) => ({ ...prev, offset: 0 }))
-                    const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
-                    localStorage.setItem(`${tableName}__prevOffset`, params.offset > 0 ? params.offset : prevOffset)
-                } else {
-                    const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
-                    setParams((prev: any) => ({ ...prev, offset: prevOffset }))
-                }
+        const keys = Object.keys(outsideFilters)
+
+        for (const i of keys) {
+            if (params[i] !== outsideFilters[i]) {
+                setParams((prev: any) => ({ ...prev, offset: 0 }))
+                const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
+                localStorage.setItem(`${tableName}__prevOffset`, params.offset > 0 ? params.offset : prevOffset)
+            } else {
+                const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
+                setParams((prev: any) => ({ ...prev, offset: prevOffset }))
             }
         }
-
     }, [outsideFilters]);
 
     return (
