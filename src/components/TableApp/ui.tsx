@@ -43,16 +43,26 @@ const TableApp: React.FC = () => {
     const [selectedCars, setSelectedCars] = useState([])
     const [selectedProducts, setSelectedProducts] = useState([])
     const [openedCar, setOpenedCar] = useState<null | number>(null)
+    const [openedPart, setOpenedPart] = useState<null | number>(null)
 
-    const [carOutsideFilters, setCarOutsideFilters] = useState({})
+    const [carToPartOutsideFilter, setCarToPartOutsideFilter] = useState({})
+    const [partToCarOutsideFilters, setPartToCarOursideFilters] = useState({})
 
     useEffect(() => {
         if (openedCar) {
-            setCarOutsideFilters({ 'cars': openedCar })
+            setCarToPartOutsideFilter({ 'cars': openedCar })
         } else {
-            setCarOutsideFilters({ 'cars': '' })
+            setCarToPartOutsideFilter({ 'cars': '' })
         }
     }, [openedCar])
+
+    useEffect(() => {
+        if (openedPart) {
+            setPartToCarOursideFilters({ 'products': openedPart })
+        } else {
+            setPartToCarOursideFilters({ 'products': '' })
+        }
+    }, [openedPart])
 
     const handleClickMakeRelation = (e: any) => {
         const data = {
@@ -85,6 +95,7 @@ const TableApp: React.FC = () => {
                         setSelectedItems={setSelectedCars}
                         openedItem={openedCar}
                         setOpenedItem={setOpenedCar}
+                        outsideFilters={partToCarOutsideFilters}
                     />
                 </div>
                 <button className="create_connection" onClick={handleClickMakeRelation}>
@@ -98,7 +109,9 @@ const TableApp: React.FC = () => {
                         endpoint="/cars/products/"
                         selectedItems={selectedProducts}
                         setSelectedItems={setSelectedProducts}
-                        outsideFilters={carOutsideFilters}
+                        outsideFilters={carToPartOutsideFilter}
+                        openedItem={openedPart}
+                        setOpenedItem={setOpenedPart}
                     />
                 </div>
             </div>

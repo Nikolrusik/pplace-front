@@ -46,7 +46,8 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
         offset: String('0'),
         ordering: 'id',
         search: '',
-        ...queryParams
+        ...queryParams,
+        ...outsideFilters
     })
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
     }, [params])
 
     const fetchData = () => {
-        const dataServices = { ...queryParams, ...params }
+        const dataServices = { ...queryParams, ...params, ...outsideFilters }
 
         setIsLoading(true)
         axios.get(`${BACKEND_URL}${endpoint}`, {
@@ -87,13 +88,6 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
         if (toUpdate) { fetchData() }
     }, [toUpdate])
 
-
-    useEffect(() => {
-        setToUpdate(true)
-        setParams((prev: any) => {
-            return { ...prev, ...outsideFilters }
-        })
-    }, [outsideFilters])
 
     const onSubmit = (e: any) => {
         e.preventDefault()
@@ -121,6 +115,25 @@ const ControlledTable: React.FC<TControlledTable> = (props) => {
             return { ...prevParams, ordering: order_field }
         })
     }
+    const [initialMount, setInitialMount] = useState(true); // Добавляем состояние для отслеживания первоначального монтирования
+
+    useEffect(() => {
+        setInitialMount(true)
+        if (initialMount) {
+            const keys = Object.keys(outsideFilters)
+            for (const i of keys) {
+                if (params[i] !== outsideFilters[i]) {
+                    setParams((prev: any) => ({ ...prev, offset: 0 }))
+                    const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
+                    localStorage.setItem(`${tableName}__prevOffset`, params.offset > 0 ? params.offset : prevOffset)
+                } else {
+                    const prevOffset = localStorage.getItem(`${tableName}__prevOffset`)
+                    setParams((prev: any) => ({ ...prev, offset: prevOffset }))
+                }
+            }
+        }
+
+    }, [outsideFilters]);
 
     return (
         <div className={classNames(tableName, 'controlled_table')}>

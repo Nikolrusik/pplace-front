@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement } from "react";
 
 
 function getColumn(column: any, obj: any, settings: any): ReactElement {
@@ -12,7 +12,7 @@ function getColumn(column: any, obj: any, settings: any): ReactElement {
         }
     } else {
         if (settings[column]) {
-            result = <td key={column}>{obj[column]} </td>
+            result = obj[column]
         }
     }
 
