@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Categories from "./components/Categories";
-import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 
 import './styles/App.scss';
-import { CARS, ENGINES, MAIN, MANUFACTURERS, MODELS, PARTS } from "./constants/paths";
-import Models from "./components/Models";
-import Parts from "./components/Parts";
+import { MAIN } from "./constants/paths";
 import ServerDown from "./components/ServerDown";
 import axios from "axios";
 import BACKEND_URL from "./constants/constants";
-import Main from "./components/Main";
-import Cars from "./components/Cars";
-import Engines from "./components/Engines";
 import TableApp from "./components/TableApp";
+import PartsControl from "./components/pages/PartsControl/ui";
 
 const App = (props: any) => {
     const { BX24 } = props;
@@ -42,8 +37,6 @@ const App = (props: any) => {
         return () => clearInterval(interval);
     }, [serverAvailable])
 
-    // console.log(serverAvailable)
-
     return (
         <>
             <h1>TEST | Марки </h1>
@@ -62,13 +55,7 @@ const App = (props: any) => {
                     <Route path={'*'} element={<ServerDown />} />
                     {serverAvailable &&
                         <>
-                            <Route path={MAIN} element={<TableApp />} />
-                            <Route path={ENGINES} element={<Engines />} />
-                            <Route path={MANUFACTURERS} element={<Categories />} />
-                            <Route path={CARS} element={<Cars />} />
-                            {/* <Route path={MODELS + '/:car_id'} element={<Models />} /> */}
-                            <Route path={PARTS} element={<Parts />} />
-                            <Route path={MODELS + '/:car_id/:model_id/'} element={<Parts />} />
+                            <Route path={MAIN} element={<PartsControl />} />
                         </>
                     }
                 </Routes>

@@ -1,0 +1,10 @@
+.table-control-top {
+    display: flex;
+    flex-direction: column;
+
+    &__main {
+        display: flex;
+        gap: 10px;
+        min-height: 40px;
+    }
+}

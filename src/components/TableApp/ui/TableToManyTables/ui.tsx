@@ -41,7 +41,7 @@ const TableToManyTables: React.FC<TTableToManyTables> = (props) => {
 
     return (
         <div className="tbl">
-            <table>
+            <table cellSpacing={0} cellPadding={0}>
                 <thead>
                     <tr>
                         <td>#</td>

@@ -16,11 +16,6 @@ const TableControl: React.FC<TTableControl> = (props) => {
     return (
         <div className={classNames("table_control", className)}>
             <form onSubmit={onSubmit}>
-                <div className="table_control__search">
-                    <div className="table_control__label">Поиск</div>
-                    <input name="search" type="text" defaultValue={params.search} />
-                    <button type="submit">Найти</button>
-                </div>
                 <div className="table_control__limit">
                     <div className="table_control__label">Кол-во на странице</div>
                     <select name="car_limit" value={params.limit}
