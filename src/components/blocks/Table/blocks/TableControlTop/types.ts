@@ -18,5 +18,5 @@ export type TTableControlTop = {
     goSearch: (value: string) => void
 
     limits?: number[]
-
+    fixed?: boolean
 }

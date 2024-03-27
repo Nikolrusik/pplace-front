@@ -13,6 +13,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.svg$/,
+                use: ['svg-loader'],
+            },
+            {
                 test: /\.(js|jsx|ts|tsx)$/, // Добавляем ts и tsx в список расширений
                 exclude: /node_modules/,
                 use: ['babel-loader', 'ts-loader'], // Добавляем ts-loader для обработки TypeScript файлов
@@ -20,7 +24,7 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: ['style-loader', 'css-loader', 'sass-loader'],
-            },
+            }
         ],
     },
     plugins: [

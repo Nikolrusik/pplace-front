@@ -1,5 +1,5 @@
 import "./Table.scss"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import TableMain from "./blocks/TableMain"
 import { TTable } from "./types"
 import classNames from "classnames"
@@ -9,28 +9,31 @@ import queryString from "query-string"
 import axios from "axios"
 import BACKEND_URL from "../../../constants/constants"
 import API_TOKEN from "../../../constants/tokens"
+import openFullscreen from "../../../utils/utils"
 
 const Table: React.FC<TTable> = (props) => {
     const {
-        className,
         uniqueTableName,
+        endpoint,
         settings = {},
         updateSettings,
-        defaultPageSize = 25,
-        hasHead = true,
-        hasInfo = true,
-        hasPaginator = true,
-        hasSearch = true,
         outsideFilters,
+
         selectedItems,
         setSelectedItems,
 
         openedItem,
         setOpenedItem,
-        // endpoint
+
+        className,
+        defaultPageSize = 25,
+        controlPosition = 'bottom',
+        hasControl = true,
+        hasInfo = true,
+        hasPaginator = true,
+        hasSearch = true,
     } = props
 
-    const endpoint = '/cars/car/'
 
     const [data, setData] = useState([])
 
@@ -94,17 +97,6 @@ const Table: React.FC<TTable> = (props) => {
     }, [toUpdate])
 
 
-    const onSubmit = (e: any) => {
-        e.preventDefault()
-        setParams((prevParams: any) => ({
-            ...prevParams,
-            is_search: String(!!e.target.search.value),
-            search: !!e.target.search.value ? e.target.search.value : '',
-            limit: String(e.target?.car_limit.value),
-            offset: !!e.target.search.value && (!!e.target.search.value != prevParams.is_search) ? String('0') : prevParams.offset
-        }))
-    }
-
     useEffect(() => {
         const storedSettings = localStorage.getItem(`${uniqueTableName}__settings`);
 
@@ -116,12 +108,6 @@ const Table: React.FC<TTable> = (props) => {
     useEffect(() => {
         localStorage.setItem(`${uniqueTableName}__settings`, JSON.stringify(settings));
     }, [settings])
-
-    const setOrdering = (order_field: string) => {
-        setParams((prevParams: any) => {
-            return { ...prevParams, ordering: order_field }
-        })
-    }
 
     useEffect(() => {
         const keys = Object.keys(outsideFilters)
@@ -166,31 +152,65 @@ const Table: React.FC<TTable> = (props) => {
         })
     }
 
+    const tblRef = useRef(null)
+
+    const [isFixed, setIsFixed] = useState(true);
+
+    const handleScroll = () => {
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        if (tblRef.current) {
+            const tblRect = tblRef.current.getBoundingClientRect();
+            if (tblRect.bottom <= windowHeight || tblRect.bottom <= 0) {
+                setIsFixed(false)
+            }
+            else if (tblRect.top <= windowHeight) {
+                setIsFixed(true);
+            } else {
+                setIsFixed(false)
+            }
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [tblRef]);
+
+    const setOrdering = (field: string) => {
+        setParam('ordering', field)
+    }
+
     return (
-        <div className={classNames(className, 'table-generic')}>
-            {hasHead &&
+        <div className={classNames(className, 'table-generic')} ref={tblRef}>
+            <div className="table-generic__container">
+                <TableMain
+                    data={data}
+                    columns={columns}
+                    openedItem={openedItem}
+                    clickItem={clickItem}
+                    onChangeCheckbox={changeCheckbox}
+                    selectedItems={selectedItems}
+                    settings={settings}
+                    currentOrdering={params?.ordering}
+                    setOrdering={setOrdering}
+                />
+            </div>
+            {hasControl && controlPosition === 'bottom' &&
                 <TableControlTop
                     hasPaginator={hasPaginator}
                     hasSearch={hasSearch}
                     hasLimit={true}
                     hasInfo={hasInfo}
-
+                    fixed={false}
                     params={params}
                     setParam={setParam}
                     total={total}
                     selectedItems={selectedItems}
                     setSelectedItems={setSelectedItems}
                     goSearch={goSearch}
+                    limits={[1, 25, 50, 100]}
                 />
             }
-            <TableMain
-                data={data}
-                columns={columns}
-                openedItem={openedItem}
-                clickItem={clickItem}
-                onChangeCheckbox={changeCheckbox}
-                selectedItems={selectedItems}
-            />
         </div>
     )
 }

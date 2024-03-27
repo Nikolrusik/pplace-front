@@ -1,4 +1,16 @@
 .table-generic {
     width: 50%;
-    // overflow: auto;
+    border: 1px solid black;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-bottom: 90px;
+    background: white;
+
+    &__container {
+        overflow: scroll;
+        box-sizing: border-box;
+        height: 100%;
+    }
 }

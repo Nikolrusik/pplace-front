@@ -1,4 +1,5 @@
 import { TableHTMLAttributes } from "react";
+import { TControlledTableFieldSettings } from "../../types";
 
 
 export type TTTableBody = TableHTMLAttributes<HTMLTableSectionElement> & {
@@ -12,4 +13,6 @@ export type TTTableBody = TableHTMLAttributes<HTMLTableSectionElement> & {
     openedItem?: number
 
     selectedItems?: number[]
+
+    settings: TControlledTableFieldSettings
 }

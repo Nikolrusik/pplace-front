@@ -22,49 +22,58 @@ const TableControlTop: React.FC<TTableControlTop> = (props) => {
         selectedItems,
         setSelectedItems,
         goSearch,
-        limits
+        fixed,
+        limits = [25, 50, 100]
     } = props
 
     return (
-        <div className={classNames(className, 'table-control-top')}>
-            <div className={classNames(`${className}__main`, 'table-control-top__main')}>
-                {hasSearch &&
-                    <TableSearch
-                        value={params.search}
-                        goSearch={goSearch}
+        <>
+            <div className={classNames(className, 'table-control-top', {
+                'is-fixed': fixed,
+            })}>
+                <div className='table-control-top__top'>
+                    {hasLimit &&
+                        <TableLimit
+                            limit={params.limit}
+                            setParam={setParam}
+                            limits={limits}
+                        />
+                    }
+                    {hasSearch &&
+                        <TableSearch
+                            value={params.search}
+                            goSearch={goSearch}
+                        />
+                    }
+                </div>
+                <div className="table-control-top__center">
+                    {hasInfo &&
+                        <TableInfo
+                            total={total}
+                            setSelectedItems={setSelectedItems}
+                            selectedItems={selectedItems}
+                        />
+                    }
+                    <TableFieldsControl
+                        columns={['id']}
+                        currentSettings={{}}
+                        updateSettings={(value: any) => { }}
                     />
-                }
-                {hasLimit &&
-                    <TableLimit
-                        limit={params.limit}
-                        setParam={setParam}
-                        limits={limits}
-                    />
-                }
-                {hasInfo &&
-                    <TableInfo
-                        total={total}
-                        setSelectedItems={setSelectedItems}
-                        selectedItems={selectedItems}
-                    />
-                }
-                <TableFieldsControl
-                    columns={['id']}
-                    currentSettings={{}}
-                    updateSettings={(value: any) => { }}
-                />
+                </div>
+
+                <div className='table-control-top__bottom'>
+                    {hasPaginator &&
+                        <Paginator
+                            limit={params.limit}
+                            offset={params.offset}
+                            setOffset={(e: number) => setParam('offset', String(e))}
+                            total={total}
+                        />
+                    }
+                </div>
             </div>
-            <div className={classNames(`${className}__other`, 'table-control-top__other')}>
-                {hasPaginator &&
-                    <Paginator
-                        limit={params.limit}
-                        offset={params.offset}
-                        setOffset={(e: number) => setParam('offset', String(e))}
-                        total={total}
-                    />
-                }
-            </div>
-        </div>
+            <div className="table-control-top__empty"></div>
+        </>
     )
 }
 

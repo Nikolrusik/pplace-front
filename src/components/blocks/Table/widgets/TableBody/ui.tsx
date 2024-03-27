@@ -9,21 +9,18 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         className,
         data,
         columns,
-        allowMultiSelect,
+        allowMultiSelect = false,
         clickItem = (id: number) => { },
         onChangeCheckbox = (id: number) => { },
         openedItem,
         selectedItems,
+        settings,
+
         ...rest
     } = props
 
-    const hasViewColumns = !!columns
-
-    const defaultSettings = {
-        id: true,
-        model: true,
-        body_model: true
-    }
+    const settingsKeys = Object.keys(settings)
+    const hasViewColumns = settingsKeys.length > 0
 
     return (
         <tbody
@@ -32,28 +29,34 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         >
             {data.length ?
                 data.map((item: any) => {
-                    const viewColumns = hasViewColumns ? columns : Object.keys(item)
+                    const viewColumns = hasViewColumns ? settingsKeys : Object.keys(item)
                     return (
                         <tr
-                            className={classNames("item", {
+                            className={classNames("table-body__item", {
                                 "is-opened": openedItem === item.id
                             })}
                             key={item.id}
                         >
                             {allowMultiSelect &&
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        value={item?.id}
-                                        onChange={() => onChangeCheckbox(item.id)}
-                                        checked={selectedItems.includes(item.id)}
-                                    />
+                                <td className="table-body__item__col">
+                                    <span>
+                                        <input
+                                            type="checkbox"
+                                            value={item?.id}
+                                            onChange={() => onChangeCheckbox(item.id)}
+                                            checked={selectedItems.includes(item.id)}
+                                        />
+                                    </span>
                                 </td>}
                             {viewColumns.map((column, index) => (
-                                <td key={index}
+                                <td
+                                    className="table-body__item__col"
+                                    key={index}
                                     onClick={() => clickItem(item.id)}
                                 >
-                                    {getColumn(column, item, defaultSettings)}
+                                    <span>
+                                        {getColumn(column, item, settings)}
+                                    </span>
                                 </td>
                             ))}
                         </tr>
@@ -61,9 +64,9 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                 })
                 :
                 <tr className="item__empty">
-                    <div className="item__empty__content">
+                    <td colSpan={settingsKeys.length}>
                         Не найдено ни одного объекта
-                    </div>
+                    </td>
                 </tr>
             }
         </tbody>

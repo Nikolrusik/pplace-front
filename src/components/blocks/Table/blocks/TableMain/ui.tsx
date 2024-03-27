@@ -17,17 +17,25 @@ const TableMain: React.FC<TTableMain> = (props) => {
         onChangeCheckbox,
         openedItem,
         selectedItems,
+        ref,
+        settings,
+        setOrdering,
+        currentOrdering,
         ...rest
     } = props
 
     return (
         <table
             className={classNames(className, 'default-table')}
+            ref={ref}
             {...rest}
         >
             <TableHead
                 allowMultiSelect={allowMultiSelect}
                 columns={columns}
+                settings={settings}
+                setOrdering={setOrdering}
+                currentOrdering={currentOrdering}
             />
             <TableBody
                 allowMultiSelect={allowMultiSelect}
@@ -37,6 +45,7 @@ const TableMain: React.FC<TTableMain> = (props) => {
                 onChangeCheckbox={onChangeCheckbox}
                 openedItem={openedItem}
                 selectedItems={selectedItems}
+                settings={settings}
             />
         </table>
     )

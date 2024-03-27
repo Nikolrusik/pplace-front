@@ -11,14 +11,14 @@ const TableLimit: React.FC<TTableLimit> = (props) => {
         className,
         setParam,
         limit,
-        limits = [10, 50, 100],
+        limits,
     } = props
 
 
     return (
         <div className={classNames(className, "table-limit")}>
             <div className='table-limit__label'>
-                Кол-во на стр.
+                Размер
             </div>
             <select
                 value={limit}

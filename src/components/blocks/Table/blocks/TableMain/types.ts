@@ -1,4 +1,5 @@
-import { TableHTMLAttributes } from "react";
+import { RefObject, TableHTMLAttributes } from "react";
+import { TControlledTableFieldSettings } from "../../types";
 
 
 export type TTableMain = TableHTMLAttributes<HTMLTableElement> & {
@@ -13,4 +14,10 @@ export type TTableMain = TableHTMLAttributes<HTMLTableElement> & {
     onChangeCheckbox?: (id: number) => void
 
     selectedItems?: number[]
+    ref?: RefObject<HTMLTableElement>
+
+    settings: TControlledTableFieldSettings
+
+    setOrdering?: (field: string) => void
+    currentOrdering?: string
 }

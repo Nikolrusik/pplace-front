@@ -1,27 +1,35 @@
 import React from "react"
-type TControlledTableFieldSettings = {
+export type TControlledTableFieldSettings = {
     [field: string]: boolean | TControlledTableFieldSettings
 }
-export type TTable = {
-    className?: string,
-    uniqueTableName: string,
-    settings: TControlledTableFieldSettings,
+
+export type TTableHasOptions = {
     hasPaginator?: boolean,
-    hasHead?: boolean,
+    hasControl?: boolean,
     hasSearch?: boolean,
     hasInfo?: boolean,
+}
 
-    defaultPageSize?: number,
+export type TTable = TTableHasOptions & {
+    endpoint: string
+    uniqueTableName: string,
+    settings: TControlledTableFieldSettings,
+    updateSettings: React.Dispatch<React.SetStateAction<any>>
     outsideFilters?: {
         [field: string]: any
     }
-    updateSettings: React.Dispatch<React.SetStateAction<any>>
-    endpoint?: string
 
-
-    selectedItems: any[],
-    setSelectedItems: React.Dispatch<React.SetStateAction<any>>,
+    selectedItems?: any[],
+    setSelectedItems?: React.Dispatch<React.SetStateAction<any>>,
 
     openedItem?: number,
     setOpenedItem?: (value: any) => void
-} 
+
+    controlPosition?: 'top' | 'bottom',
+
+    className?: string,
+    defaultPageSize?: number,
+
+    limits?: number[]
+}
+
