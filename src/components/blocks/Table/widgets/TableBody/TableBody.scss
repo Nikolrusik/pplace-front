@@ -1,8 +1,21 @@
 .table-body {
     &__item {
-        background: #c8f4ff;
+        background: white;
+
+        &__empty {
+            visibility: hidden;
+            height: 30px;
+        }
+
+        &.is-loading,
+        &.is-loading:nth-child(odd) {
+            background: linear-gradient(90deg, #ebebeb 0%, #cccccc 52%, #ebebeb 100%);
+            background-size: 200% 100%;
+            animation: loadingAnimation 1s linear infinite;
+        }
 
         &:nth-child(odd) {
+            animation: loadingAnimation 1s linear 0.5s infinite;
             background: #e7faff;
         }
 

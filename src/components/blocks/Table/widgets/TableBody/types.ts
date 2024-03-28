@@ -15,4 +15,5 @@ export type TTTableBody = TableHTMLAttributes<HTMLTableSectionElement> & {
     selectedItems?: number[]
 
     settings: TControlledTableFieldSettings
+    isLoading?: boolean
 }

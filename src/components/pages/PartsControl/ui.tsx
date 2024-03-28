@@ -92,11 +92,10 @@ const PartsControl: React.FC = (props) => {
             .catch(() => alert("Неизвестная ошибка"))
     }
 
+
     const tablesRef = useRef(null)
     return (
         <>
-            <h1></h1>
-
             <button onClick={() => openFullscreen(tablesRef)}>Открыть</button>
             <div className="tables" ref={tablesRef}>
                 <Table

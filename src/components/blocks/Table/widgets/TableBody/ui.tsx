@@ -2,7 +2,7 @@ import "./TableBody.scss"
 import React from "react"
 import { TTTableBody } from "./types"
 import classNames from "classnames"
-import getColumn from "../../../../TableApp/ui/TableToManyTables/utils"
+import getColumn from "../../utils"
 
 const TableBody: React.FC<TTTableBody> = (props) => {
     const {
@@ -15,6 +15,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         openedItem,
         selectedItems,
         settings,
+        isLoading = false,
         ...rest
     } = props
 
@@ -27,12 +28,13 @@ const TableBody: React.FC<TTTableBody> = (props) => {
             {...rest}
         >
             {data.length ?
-                data.map((item: any) => {
+                (data.map((item: any) => {
                     const viewColumns = hasViewColumns ? columns : Object.keys(item)
                     return (
                         <tr
                             className={classNames("table-body__item", {
-                                "is-opened": openedItem === item.id
+                                "is-opened": openedItem === item.id,
+                                "is-loading": isLoading
                             })}
                             key={item.id}
                         >
@@ -44,6 +46,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                                             value={item?.id}
                                             onChange={() => onChangeCheckbox(item.id)}
                                             checked={selectedItems.includes(item.id)}
+                                            disabled={isLoading}
                                         />
                                     </span>
                                 </td>}
@@ -51,7 +54,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                                 <td
                                     className="table-body__item__col"
                                     key={index}
-                                    onClick={() => clickItem(item.id)}
+                                    onClick={() => { if (!isLoading) clickItem(item.id) }}
                                 >
                                     <span>
                                         {getColumn(column, item, settings)}
@@ -60,13 +63,27 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                             ))}
                         </tr>
                     )
-                })
-                :
-                <tr className="item__empty">
-                    <td colSpan={settingsKeys.length}>
-                        Не найдено ни одного объекта
-                    </td>
-                </tr>
+                }))
+                : isLoading ?
+                    [...Array(25)].map((_, index) => (
+                        <tr className="table-body__item is-loading" key={index}>
+                            {allowMultiSelect &&
+                                <td className="table-body__item__col">
+                                    <div className="table-body__item__col table-body__item__empty"></div>
+                                </td>}
+                            {columns.map((_, index) => (
+                                <td key={index}>
+                                    <div className="table-body__item__col table-body__item__empty">Emty</div>
+                                </td>
+                            ))}
+                        </tr>
+                    ))
+                    :
+                    <tr className="item__empty">
+                        <td colSpan={columns.length} >
+                            Не найдено ни одного объекта
+                        </td>
+                    </tr>
             }
         </tbody>
     )

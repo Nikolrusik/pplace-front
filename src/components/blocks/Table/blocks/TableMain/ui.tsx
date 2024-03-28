@@ -21,6 +21,7 @@ const TableMain: React.FC<TTableMain> = (props) => {
         settings,
         setOrdering,
         currentOrdering,
+        isLoading,
         ...rest
     } = props
 
@@ -46,6 +47,7 @@ const TableMain: React.FC<TTableMain> = (props) => {
                 openedItem={openedItem}
                 selectedItems={selectedItems}
                 settings={settings}
+                isLoading={isLoading}
             />
         </table>
     )

@@ -29,7 +29,7 @@ const TableHead: React.FC<TTableHead> = (props) => {
         >
             <tr>
                 {allowMultiSelect &&
-                    <td className={classNames('table-head__col')}>#</td>
+                    <td className={classNames('table-head__col')}><span>#</span></td>
                 }
                 {columns.map((field, index) => (
                     <td

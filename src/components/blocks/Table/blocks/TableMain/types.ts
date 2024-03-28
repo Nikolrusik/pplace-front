@@ -20,4 +20,6 @@ export type TTableMain = TableHTMLAttributes<HTMLTableElement> & {
 
     setOrdering?: (field: string) => void
     currentOrdering?: string
+
+    isLoading?: boolean,
 }

@@ -195,6 +195,7 @@ const Table: React.FC<TTable> = (props) => {
                     settings={settings}
                     currentOrdering={params?.ordering}
                     setOrdering={setOrdering}
+                    isLoading={isLoading}
                 />
             </div>
             {hasControl && controlPosition === 'bottom' &&
