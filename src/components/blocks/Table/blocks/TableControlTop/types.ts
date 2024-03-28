@@ -1,3 +1,4 @@
+import { TControlledTableFieldSettings } from "../../types"
 
 
 export type TTableControlTop = {
@@ -19,4 +20,7 @@ export type TTableControlTop = {
 
     limits?: number[]
     fixed?: boolean
+
+    settings?: TControlledTableFieldSettings
+    updateSettings?: React.Dispatch<React.SetStateAction<any>>
 }

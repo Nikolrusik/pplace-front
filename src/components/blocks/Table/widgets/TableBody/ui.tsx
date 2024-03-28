@@ -15,7 +15,6 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         openedItem,
         selectedItems,
         settings,
-
         ...rest
     } = props
 
@@ -29,7 +28,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         >
             {data.length ?
                 data.map((item: any) => {
-                    const viewColumns = hasViewColumns ? settingsKeys : Object.keys(item)
+                    const viewColumns = hasViewColumns ? columns : Object.keys(item)
                     return (
                         <tr
                             className={classNames("table-body__item", {

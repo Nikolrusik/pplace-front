@@ -2,7 +2,7 @@ import "./TableControlTop.scss"
 import classNames from "classnames"
 import React from "react"
 import { TTableControlTop } from "./types"
-import TableFieldsControl from "../../widgets/TableFieldsControl"
+import TableFieldsControl from "../TableFieldsConrol"
 import TableLimit from "../../widgets/TableLimit/ui"
 import Paginator from "../../../../widgets/Paginator"
 import TableInfo from "../../widgets/TableInfo"
@@ -12,6 +12,8 @@ import TableSearch from "../../widgets/TableSearch"
 const TableControlTop: React.FC<TTableControlTop> = (props) => {
     const {
         className,
+        settings,
+        updateSettings,
         hasInfo = true,
         hasPaginator,
         hasLimit = true,
@@ -55,9 +57,8 @@ const TableControlTop: React.FC<TTableControlTop> = (props) => {
                         />
                     }
                     <TableFieldsControl
-                        columns={['id']}
-                        currentSettings={{}}
-                        updateSettings={(value: any) => { }}
+                        currentSettings={settings}
+                        updateSettings={updateSettings}
                     />
                 </div>
 

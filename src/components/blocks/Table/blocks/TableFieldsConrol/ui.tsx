@@ -1,14 +1,13 @@
+import "./TableFieldsControl.scss"
 import classNames from "classnames"
 import React, { useState } from "react"
 import { TTableFieldsControl } from "./types"
-import TableControlColumn from "../TableControlColumn/ui"
+import TableControlColumn from "../../widgets/TableControlColumn/ui"
 
 
 const TableFieldsControl: React.FC<TTableFieldsControl> = (props) => {
     const {
         className,
-        columns,
-
         currentSettings,
         updateSettings,
     } = props
@@ -37,6 +36,7 @@ const TableFieldsControl: React.FC<TTableFieldsControl> = (props) => {
         });
     };
     const [isOpen, setIsOpen] = useState(false)
+    const allColumns = Object.keys(currentSettings)
 
     return (
         <div className={classNames(className, 'table-fields-control')}>
@@ -48,7 +48,7 @@ const TableFieldsControl: React.FC<TTableFieldsControl> = (props) => {
             </button>
             {isOpen &&
                 <div className="table-fields-control__columns">
-                    {columns.map((column, index) => (
+                    {allColumns.map((column, index) => (
                         <TableControlColumn
                             className="table-fields-control__headcontrol_column"
                             key={index}

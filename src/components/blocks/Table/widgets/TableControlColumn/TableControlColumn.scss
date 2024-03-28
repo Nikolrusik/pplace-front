@@ -2,14 +2,20 @@
     &__name {
         padding: 0 3px;
         border: 1px solid black;
+        display: flex;
 
         &.is-selected {
             background: #0080007a;
         }
     }
 
-    &.is-open &__name {
-        border-bottom: 1px solid black;
+    & &__name .column-caret {
+        transition: 0.3s;
+        transform: rotate(90deg);
+    }
+
+    &.is-open &__name .column-caret {
+        transform: rotate(0deg);
     }
 
     &__child {

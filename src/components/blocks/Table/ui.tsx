@@ -106,7 +106,9 @@ const Table: React.FC<TTable> = (props) => {
     }, []);
 
     useEffect(() => {
+
         localStorage.setItem(`${uniqueTableName}__settings`, JSON.stringify(settings));
+
     }, [settings])
 
     useEffect(() => {
@@ -124,7 +126,7 @@ const Table: React.FC<TTable> = (props) => {
         }
     }, [outsideFilters]);
 
-    const columns = Object.keys(settings)
+    const columns = Object.keys(settings).filter((x) => !!settings[x])
 
     const setParam = (param: string, value: any) => {
         setParams((prev: any) => ({ ...prev, [param]: value }))
@@ -197,6 +199,8 @@ const Table: React.FC<TTable> = (props) => {
             </div>
             {hasControl && controlPosition === 'bottom' &&
                 <TableControlTop
+                    settings={settings}
+                    updateSettings={updateSettings}
                     hasPaginator={hasPaginator}
                     hasSearch={hasSearch}
                     hasLimit={true}

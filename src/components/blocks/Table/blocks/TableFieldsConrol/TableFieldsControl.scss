@@ -1,0 +1,12 @@
+.table-fields-control {
+    position: relative;
+
+    &__columns {
+        z-index: 900;
+        position: absolute;
+        background: #62dfff;
+        bottom: 20px;
+        right: 0;
+        box-shadow: 0px 6px 8px 7px rgba(34, 60, 80, 0.23);
+    }
+}
