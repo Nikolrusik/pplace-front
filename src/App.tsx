@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Route, Routes, HashRouter } from "react-router-dom";
+import './styles/App.scss'
+import React, { useEffect, useState } from "react"
+import { Route, Routes, HashRouter } from "react-router-dom"
 
-import './styles/App.scss';
-import { MAIN } from "./constants/paths";
-import ServerDown from "./components/ServerDown";
-import axios from "axios";
-import BACKEND_URL from "./constants/constants";
-import TableApp from "./components/TableApp";
-import PartsControl from "./components/pages/PartsControl/ui";
+import { MAIN } from "./constants/paths"
+import ServerDown from "./components/pages/ServerDown"
+import axios from "axios"
+import BACKEND_URL from "./constants/constants"
+import PartsControl from "./components/pages/PartsControl/ui"
 
 const App = (props: any) => {
-    const { BX24 } = props;
+    const { BX24 } = props
     const [firstName, setFirstName] = useState('')
     const auth = BX24?.getAuth()
     const [serverAvailable, setServerAvailable] = useState(true)
@@ -32,9 +31,9 @@ const App = (props: any) => {
     useEffect(() => {
         const interval = setInterval(() => {
             checkServer()
-        }, 5000);
+        }, 5000)
 
-        return () => clearInterval(interval);
+        return () => clearInterval(interval)
     }, [serverAvailable])
 
     return (
@@ -64,4 +63,4 @@ const App = (props: any) => {
     )
 }
 
-export default App;
+export default App
