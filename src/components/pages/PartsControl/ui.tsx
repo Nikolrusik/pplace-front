@@ -5,6 +5,8 @@ import openFullscreen from "../../../utils/utils"
 import Table from "../../blocks/Table"
 import React, { useEffect, useRef, useState } from "react"
 import API_TOKEN from "../../../constants/tokens"
+import Button from "../../generic/Button"
+import { useNavigate } from "react-router-dom"
 
 const PartsControl: React.FC = (props) => {
     // settings отвечают за отображаемые поля
@@ -94,9 +96,21 @@ const PartsControl: React.FC = (props) => {
 
 
     const tablesRef = useRef(null)
+
+    const isInsideIframe = window.location !== window.parent.location;
+
+    const openFull = () => {
+        if (isInsideIframe) {
+            window.open(window.location.href, '_blank', 'noopener,noreferrer')
+        } else {
+            openFullscreen(tablesRef)
+        }
+    }
+
+
     return (
         <>
-            <button onClick={() => openFullscreen(tablesRef)}>Открыть</button>
+            <button onClick={() => openFull()}>Открыть</button>
             <div className="tables" ref={tablesRef}>
                 <Table
                     endpoint="/cars/car/"
@@ -109,10 +123,11 @@ const PartsControl: React.FC = (props) => {
 
                     openedItem={openedCar}
                     setOpenedItem={setOpenedCar}
+
+                    allowMultiSelect={true}
+                    allowOneSelect={true}
                 />
-                <button onClick={handleClickMakeRelation}>
-                    Создать связи
-                </button>
+                <Button onClick={handleClickMakeRelation}>Создать связи</Button>
                 <Table
                     endpoint="/cars/products/"
                     settings={productsSettings}
@@ -124,6 +139,9 @@ const PartsControl: React.FC = (props) => {
 
                     openedItem={openedPart}
                     setOpenedItem={setOpenedPart}
+
+                    allowMultiSelect={true}
+                    allowOneSelect={true}
                 />
             </div>
 

@@ -3,6 +3,7 @@ import React from "react"
 import { TTTableBody } from "./types"
 import classNames from "classnames"
 import getColumn from "../../utils"
+import Input from "../../../../generic/Input"
 
 const TableBody: React.FC<TTTableBody> = (props) => {
     const {
@@ -10,6 +11,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
         data,
         columns,
         allowMultiSelect = false,
+        allowOneSelect = false,
         clickItem = (id: number) => { },
         onChangeCheckbox = (id: number) => { },
         openedItem,
@@ -41,7 +43,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                             {allowMultiSelect &&
                                 <td className="table-body__item__col">
                                     <span>
-                                        <input
+                                        <Input
                                             type="checkbox"
                                             value={item?.id}
                                             onChange={() => onChangeCheckbox(item.id)}
@@ -54,7 +56,7 @@ const TableBody: React.FC<TTTableBody> = (props) => {
                                 <td
                                     className="table-body__item__col"
                                     key={index}
-                                    onClick={() => { if (!isLoading) clickItem(item.id) }}
+                                    onClick={() => { if (!isLoading && allowOneSelect) clickItem(item.id) }}
                                 >
                                     <span>
                                         {getColumn(column, item, settings)}

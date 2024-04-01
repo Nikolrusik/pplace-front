@@ -2,6 +2,7 @@ import "./Paginator.scss"
 import React from "react"
 import { TPaginator } from "./types"
 import classNames from "classnames"
+import Button from "../../generic/Button"
 
 
 const Paginator: React.FC<TPaginator> = (props) => {
@@ -36,19 +37,19 @@ const Paginator: React.FC<TPaginator> = (props) => {
         <div className={classNames(className, "paginator")}>
             {totalPages.length > 1 &&
                 <div className="paginator__wrapper">
-                    <button className={classNames(classNameButton, "paginator__button")}
+                    <Button
+                        className={classNames(classNameButton, "paginator__button")}
                         onClick={() => changePage(currentPage - 1)}
-                        disabled={!hasPrev}
-                    >
+                        disabled={!hasPrev}>
                         PREV
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         className={classNames(classNameButton, "paginator__button", {
                             'is-selected': 1 === currentPage,
                         })}
                         onClick={() => changePage(1)}>
                         1
-                    </button>
+                    </Button>
                     {totalPages.slice(min_slice, max_slice).map((i) => (
                         <button
                             key={i}
@@ -63,20 +64,20 @@ const Paginator: React.FC<TPaginator> = (props) => {
                         </button>
                     ))
                     }
-                    <button
+                    <Button
                         className={classNames(classNameButton, "paginator__button", {
                             'is-selected': totalPages.length === currentPage,
                         })}
                         onClick={() => { changePage(totalPages.length) }}>
                         {totalPages.length}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         className={classNames(classNameButton, "paginator__button")}
                         onClick={() => changePage(currentPage + 1)}
                         disabled={!hasNext}
                     >
                         NEXT
-                    </button>
+                    </Button>
 
                 </div>
             }

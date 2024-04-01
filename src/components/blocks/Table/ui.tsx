@@ -13,6 +13,7 @@ import openFullscreen from "../../../utils/utils"
 
 const Table: React.FC<TTable> = (props) => {
     const {
+        className,
         uniqueTableName,
         endpoint,
         settings = {},
@@ -25,28 +26,32 @@ const Table: React.FC<TTable> = (props) => {
         openedItem,
         setOpenedItem,
 
-        className,
         defaultPageSize = 25,
         controlPosition = 'bottom',
+        controlType = 'static',
         hasControl = true,
         hasInfo = true,
         hasPaginator = true,
         hasSearch = true,
+
+        allowMultiSelect = false,
+        allowOneSelect = false
     } = props
 
-
+    // data
     const [data, setData] = useState([])
+    const [total, setTotal] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
+    const [toUpdate, setToUpdate] = useState(true)
 
+    const columns = Object.keys(settings).filter((x) => !!settings[x])
+
+    //  location
     const { search } = useLocation()
     const navigate = useNavigate()
 
     const currentParams: any = queryString.parse(search)
     const queryParams = queryString.parse(currentParams[uniqueTableName])
-
-    const [isLoading, setIsLoading] = useState(false)
-    const [toUpdate, setToUpdate] = useState(true)
-
-    const [total, setTotal] = useState(0)
 
     const [params, setParams] = useState<any>({
         is_search: String('false'),
@@ -57,6 +62,23 @@ const Table: React.FC<TTable> = (props) => {
         ...queryParams,
         ...outsideFilters
     })
+
+
+    const fetchData = () => {
+        const dataServices = { ...queryParams, ...params, ...outsideFilters }
+
+        setIsLoading(true)
+        axios.get(`${BACKEND_URL}${endpoint}`, {
+            headers: { 'Authorization': `Token ${API_TOKEN}` },
+            params: { ...dataServices }
+        }).then((resp) => {
+            setData(resp.data.results)
+            setTotal(resp.data.count)
+            setToUpdate(false)
+        })
+            .catch(() => { })
+            .finally(() => setIsLoading(false))
+    }
 
     useEffect(() => {
         const firstParams = {
@@ -76,22 +98,6 @@ const Table: React.FC<TTable> = (props) => {
         }
     }, [params])
 
-    const fetchData = () => {
-        const dataServices = { ...queryParams, ...params, ...outsideFilters }
-
-        setIsLoading(true)
-        axios.get(`${BACKEND_URL}${endpoint}`, {
-            headers: { 'Authorization': `Token ${API_TOKEN}` },
-            params: { ...dataServices }
-        }).then((resp) => {
-            setData(resp.data.results)
-            setTotal(resp.data.count)
-            setToUpdate(false)
-        })
-            .catch(() => { })
-            .finally(() => setIsLoading(false))
-    }
-
     useEffect(() => {
         if (toUpdate) { fetchData() }
     }, [toUpdate])
@@ -106,9 +112,7 @@ const Table: React.FC<TTable> = (props) => {
     }, []);
 
     useEffect(() => {
-
         localStorage.setItem(`${uniqueTableName}__settings`, JSON.stringify(settings));
-
     }, [settings])
 
     useEffect(() => {
@@ -126,7 +130,39 @@ const Table: React.FC<TTable> = (props) => {
         }
     }, [outsideFilters]);
 
-    const columns = Object.keys(settings).filter((x) => !!settings[x])
+
+    const tblRef = useRef(null)
+
+    const [isFixed, setIsFixed] = useState(false);
+
+    const handleScroll = (ref: any) => {
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        if (ref.current) {
+            const tblRect = ref.current.getBoundingClientRect();
+            if (tblRect.bottom <= windowHeight || tblRect.bottom <= 0) {
+                setIsFixed(false)
+            }
+            else if (tblRect.top <= windowHeight) {
+                setIsFixed(true)
+            } else {
+                setIsFixed(false)
+            }
+        }
+    }
+
+    const handleScrollUniversal = () => {
+        handleScroll(tblRef)
+    }
+
+    useEffect(() => {
+        if (controlType === 'fixed') {
+            window.addEventListener('scroll', handleScrollUniversal);
+            return () => window.removeEventListener('scroll', handleScrollUniversal);
+        }
+    }, [tblRef])
+
+
+    // utils
 
     const setParam = (param: string, value: any) => {
         setParams((prev: any) => ({ ...prev, [param]: value }))
@@ -154,30 +190,6 @@ const Table: React.FC<TTable> = (props) => {
         })
     }
 
-    const tblRef = useRef(null)
-
-    const [isFixed, setIsFixed] = useState(true);
-
-    const handleScroll = () => {
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        if (tblRef.current) {
-            const tblRect = tblRef.current.getBoundingClientRect();
-            if (tblRect.bottom <= windowHeight || tblRect.bottom <= 0) {
-                setIsFixed(false)
-            }
-            else if (tblRect.top <= windowHeight) {
-                setIsFixed(true);
-            } else {
-                setIsFixed(false)
-            }
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [tblRef]);
-
     const setOrdering = (field: string) => {
         setParam('ordering', field)
     }
@@ -196,6 +208,8 @@ const Table: React.FC<TTable> = (props) => {
                     currentOrdering={params?.ordering}
                     setOrdering={setOrdering}
                     isLoading={isLoading}
+                    allowMultiSelect={allowMultiSelect}
+                    allowOneSelect={allowOneSelect}
                 />
             </div>
             {hasControl && controlPosition === 'bottom' &&
@@ -206,7 +220,7 @@ const Table: React.FC<TTable> = (props) => {
                     hasSearch={hasSearch}
                     hasLimit={true}
                     hasInfo={hasInfo}
-                    fixed={false}
+                    fixed={isFixed}
                     params={params}
                     setParam={setParam}
                     total={total}

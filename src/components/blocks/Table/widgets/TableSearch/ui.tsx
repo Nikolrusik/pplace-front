@@ -1,5 +1,7 @@
 import React from "react"
 import { TTableSearch } from "./types"
+import Button from "../../../../generic/Button"
+import Input from "../../../../generic/Input"
 
 
 const TableSearch: React.FC<TTableSearch> = (props) => {
@@ -16,10 +18,10 @@ const TableSearch: React.FC<TTableSearch> = (props) => {
 
     return (
         <form className="table_control__search" onSubmit={onSubmit}>
-            <input name="search" type="text"
+            <Input name="search" type="text"
                 defaultValue={value}
             />
-            <button type="submit">Найти</button>
+            <Button type="submit">Найти</Button>
         </form>
     )
 }

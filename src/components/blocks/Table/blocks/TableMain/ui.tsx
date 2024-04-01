@@ -40,6 +40,7 @@ const TableMain: React.FC<TTableMain> = (props) => {
             />
             <TableBody
                 allowMultiSelect={allowMultiSelect}
+                allowOneSelect={allowOneSelect}
                 columns={columns}
                 data={data}
                 clickItem={clickItem}

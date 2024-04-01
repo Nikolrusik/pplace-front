@@ -7,6 +7,7 @@ export type TTTableBody = TableHTMLAttributes<HTMLTableSectionElement> & {
     className?: string
     columns?: string[]
     allowMultiSelect?: boolean
+    allowOneSelect?: boolean
 
     clickItem?: (id: number) => void
     onChangeCheckbox?: (id: number) => void

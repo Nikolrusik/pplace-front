@@ -26,10 +26,14 @@ export type TTable = TTableHasOptions & {
     setOpenedItem?: (value: any) => void
 
     controlPosition?: 'top' | 'bottom',
+    controlType?: 'static' | 'fixed',
 
     className?: string,
     defaultPageSize?: number,
 
     limits?: number[]
+
+    allowMultiSelect?: boolean
+    allowOneSelect?: boolean
 }
 

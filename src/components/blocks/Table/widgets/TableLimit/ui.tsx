@@ -4,6 +4,7 @@ import "./TableLimit.scss"
 import React from "react"
 import { TTableLimit } from "./types"
 import classNames from "classnames"
+import Select from "../../../../generic/Select"
 
 
 const TableLimit: React.FC<TTableLimit> = (props) => {
@@ -20,14 +21,14 @@ const TableLimit: React.FC<TTableLimit> = (props) => {
             <div className='table-limit__label'>
                 Размер
             </div>
-            <select
+            <Select
                 value={limit}
                 onChange={(e) => setParam('limit', Number(e.target.value))}
             >
                 {limits.map((item) => (
-                    <option value={item}>{item}</option>
+                    <option value={item} key={item}>{item}</option>
                 ))}
-            </select>
+            </Select>
         </div>
     )
 }

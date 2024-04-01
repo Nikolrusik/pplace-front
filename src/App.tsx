@@ -29,6 +29,7 @@ const App = (props: any) => {
     }
 
     useEffect(() => {
+        checkServer()
         const interval = setInterval(() => {
             checkServer()
         }, 5000)

@@ -2,6 +2,7 @@ import "./TableInfo.scss"
 import classNames from "classnames"
 import React from "react"
 import { TTableInfo } from "./types"
+import Button from "../../../../generic/Button"
 
 
 
@@ -21,7 +22,7 @@ const TableInfo: React.FC<TTableInfo> = (props) => {
             {selectedItems.length > 0 &&
                 <div className='table-info__selected'>
                     <span>Выбрано: {selectedItems.length}</span>
-                    <button onClick={() => { setSelectedItems([]) }}>Сбросить</button>
+                    <Button onClick={() => { setSelectedItems([]) }}>Сбросить</Button>
                 </div>
             }
         </div>
