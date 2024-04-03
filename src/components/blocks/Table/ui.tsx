@@ -1,5 +1,5 @@
 import "./Table.scss"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import TableMain from "./blocks/TableMain"
 import { TTable } from "./types"
 import classNames from "classnames"
@@ -10,6 +10,7 @@ import axios from "axios"
 import BACKEND_URL from "../../../constants/constants"
 import API_TOKEN from "../../../constants/tokens"
 import openFullscreen from "../../../utils/utils"
+import { AuthContext } from "../../../providers/AuthProvider"
 
 const Table: React.FC<TTable> = (props) => {
     const {
@@ -39,6 +40,7 @@ const Table: React.FC<TTable> = (props) => {
     } = props
 
     // data
+    const { user } = useContext(AuthContext)
     const [data, setData] = useState([])
     const [total, setTotal] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
@@ -46,7 +48,6 @@ const Table: React.FC<TTable> = (props) => {
 
     const columns = Object.keys(settings).filter((x) => !!settings[x])
 
-    //  location
     const { search } = useLocation()
     const navigate = useNavigate()
 
@@ -66,10 +67,13 @@ const Table: React.FC<TTable> = (props) => {
 
     const fetchData = () => {
         const dataServices = { ...queryParams, ...params, ...outsideFilters }
-
+        const headers = {
+            'Authorization': user?.ACCESS ? `Bearer ${user.ACCESS}` : null,
+            'Authbitrix': `Token ${API_TOKEN}`,
+        }
         setIsLoading(true)
         axios.get(`${BACKEND_URL}${endpoint}`, {
-            headers: { 'Authorization': `Token ${API_TOKEN}` },
+            headers: headers,
             params: { ...dataServices }
         }).then((resp) => {
             setData(resp.data.results)
@@ -100,7 +104,7 @@ const Table: React.FC<TTable> = (props) => {
 
     useEffect(() => {
         if (toUpdate) { fetchData() }
-    }, [toUpdate])
+    }, [toUpdate, user])
 
 
     useEffect(() => {

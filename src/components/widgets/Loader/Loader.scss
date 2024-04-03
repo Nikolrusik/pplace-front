@@ -1,0 +1,50 @@
+.loader {
+
+    &-wrapper {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+    }
+
+    &-elem {
+        display: block;
+        width: 80px;
+        height: 80px;
+        position: relative;
+        border-radius: 100%;
+        background: rgba(39, 174, 219, 1);
+        animation: wave 2s ease-in infinite;
+    }
+}
+
+@keyframes wave {
+    0% {
+        box-shadow:
+            0 0 0 0px rgba(39, 174, 219, 1),
+            0 0 0 20px rgba(39, 174, 219, 0.2),
+            0 0 0 40px rgba(39, 174, 219, 0.6),
+            0 0 0 60px rgba(39, 174, 219, 0.4),
+            0 0 0 80px rgba(39, 174, 219, 0.2)
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 80px rgba(39, 174, 219, 0),
+            0 0 0 60px rgba(39, 174, 219, 0.2),
+            0 0 0 40px rgba(39, 174, 219, 0.4),
+            0 0 0 20px rgba(39, 174, 219, 0.6),
+            0 0 0 0px rgba(39, 174, 219, 1)
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0px rgba(39, 174, 219, 1),
+            0 0 0 20px rgba(39, 174, 219, 0.2),
+            0 0 0 40px rgba(39, 174, 219, 0.6),
+            0 0 0 60px rgba(39, 174, 219, 0.4),
+            0 0 0 80px rgba(39, 174, 219, 0.2)
+    }
+}

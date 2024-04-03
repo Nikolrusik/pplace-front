@@ -3,12 +3,14 @@ import axios from "axios"
 import BACKEND_URL from "../../../constants/constants"
 import openFullscreen from "../../../utils/utils"
 import Table from "../../blocks/Table"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import API_TOKEN from "../../../constants/tokens"
 import Button from "../../generic/Button"
-import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../../../providers/AuthProvider"
 
 const PartsControl: React.FC = (props) => {
+    const { user } = useContext(AuthContext)
+
     // settings отвечают за отображаемые поля
     const [carSettings, setCarSettings] = useState({
         model: true,
@@ -78,7 +80,7 @@ const PartsControl: React.FC = (props) => {
 
     const handleClickMakeRelation = (e: any) => {
         const data = {
-            email: "admin@admin.ru",
+            email: user?.EMAIL,
             car_ids: selectedCars,
             product_ids: selectedParts
         }
