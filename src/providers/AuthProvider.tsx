@@ -6,14 +6,12 @@ import { UserModel } from "../models/user"
 
 const DefaultProps: AuthProps = {
     logout: () => null,
-    authAxios: axios,
     user: null,
     setUserInLocalStorage: (user: UserModel) => null
 }
 
 export interface AuthProps {
     logout: () => void
-    authAxios: AxiosInstance
     user: UserModel | null
     setUserInLocalStorage: (user: UserModel) => void
     getAccessToken?: () => string | null
@@ -26,6 +24,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
     const [access, setAccess] = useState<string | null>(null)
     const [user, setUser] = useState(__getCurrentUser())
+
+    // axios.interceptors.request.use(config => {
+    //     config.withCredentials = false;
+    //     return config;
+    // });
 
     const setUserInLocalStorage = (currentUser: UserModel | null) => {
         if (currentUser && !!currentUser.ACCESS) {
@@ -46,7 +49,6 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
         setAccess(null)
     }
 
-    const authAxios = axios.create()
 
     function __getAccessToken() {
         let newAccess = null
@@ -76,8 +78,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
             value={{
                 user,
                 setUserInLocalStorage,
-                logout,
-                authAxios,
+                logout
             }}
         >
             {children}

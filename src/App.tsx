@@ -16,6 +16,7 @@ import AuthService from './services/AuthService'
 
 
 const App = (props: any) => {
+
     const { BX24 } = props
     const { setUserInLocalStorage } = useContext(AuthContext)
     const auth = BX24?.getAuth()
@@ -91,7 +92,6 @@ const App = (props: any) => {
 
     const hasView = !isLoading && serverAvailable && allowedAcces
 
-
     return (
         <>
             <h1>TEST | Марки </h1>
@@ -107,7 +107,7 @@ const App = (props: any) => {
                 <Routes>
                     {hasView &&
                         <>
-                            <Route path={MAIN} element={<PartsControl />} />
+                            <Route path={MAIN} element={<PartsControl BX24={BX24} />} />
                         </>
                     }
                     <Route path={'*'} element={

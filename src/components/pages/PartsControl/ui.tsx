@@ -8,7 +8,10 @@ import API_TOKEN from "../../../constants/tokens"
 import Button from "../../generic/Button"
 import { AuthContext } from "../../../providers/AuthProvider"
 
+
+
 const PartsControl: React.FC = (props) => {
+
     const { user } = useContext(AuthContext)
 
     // settings отвечают за отображаемые поля
@@ -103,16 +106,15 @@ const PartsControl: React.FC = (props) => {
 
     const openFull = () => {
         if (isInsideIframe) {
-            window.open(window.location.href, '_blank', 'noopener,noreferrer')
+            window.open(window.location.href, '_blank')
         } else {
             openFullscreen(tablesRef)
         }
     }
 
-
     return (
         <>
-            <button onClick={() => openFull()}>Открыть</button>
+            <Button onClick={() => openFull()}>Открыть</Button>
             <div className="tables" ref={tablesRef}>
                 <Table
                     endpoint="/cars/car/"
